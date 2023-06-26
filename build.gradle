@@ -1,0 +1,47 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.shenyubao.langchainjava'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+//    Log
+    implementation('org.slf4j:slf4j-api:1.7.36')
+    implementation('org.slf4j:jcl-over-slf4j:1.7.25')
+    implementation('org.slf4j:log4j-over-slf4j:1.7.25')
+    implementation('ch.qos.logback:logback-core:1.2.9')
+    implementation('ch.qos.logback:logback-classic:1.2.9')
+
+    implementation('com.alibaba.fastjson2:fastjson2:2.0.23')
+    implementation('org.apache.commons:commons-lang3:3.12.0')
+    implementation('com.google.guava:guava:19.0')
+    implementation('com.knuddels:jtokkit:0.5.0')
+
+//    Vector
+    implementation('io.milvus:milvus-sdk-java:2.2.7')
+
+//    retrofit2
+    implementation('com.squareup.retrofit2:retrofit:2.9.0')
+    implementation('com.squareup.retrofit2:adapter-rxjava2:2.9.0')
+    implementation('com.squareup.retrofit2:converter-jackson:2.9.0')
+
+//    OKHTTP
+    implementation('com.squareup.okhttp3:okhttp:4.9.3')
+    implementation('com.squareup.okhttp3:okhttp-sse:4.9.3')
+    implementation('com.squareup.okhttp3:logging-interceptor:4.9.3')
+
+    compileOnly('org.projectlombok:lombok:1.18.24')
+    annotationProcessor('org.projectlombok:lombok:1.18.24')
+
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
