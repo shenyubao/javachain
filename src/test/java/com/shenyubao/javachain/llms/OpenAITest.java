@@ -1,5 +1,6 @@
 package com.shenyubao.javachain.llms;
 
+import com.shenyubao.javachain.llms.OpenAI;
 import com.shenyubao.javachain.llms.sse.OpenAIConsoleStreamListener;
 import org.junit.jupiter.api.Test;
 

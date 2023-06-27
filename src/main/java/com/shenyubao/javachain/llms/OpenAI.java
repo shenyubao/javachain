@@ -2,8 +2,8 @@ package com.shenyubao.javachain.llms;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shenyubao.javachain.CommonError;
-import com.shenyubao.javachain.chatclient.ChatClient;
 import com.shenyubao.javachain.JavaChainException;
+import com.shenyubao.javachain.chatclient.ChatClient;
 import com.shenyubao.javachain.chatclient.completion.chat.ChatCompletionChoice;
 import com.shenyubao.javachain.chatclient.completion.chat.ChatCompletionRequest;
 import com.shenyubao.javachain.chatclient.completion.chat.ChatCompletionResult;

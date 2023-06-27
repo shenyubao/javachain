@@ -1,7 +1,8 @@
-package com.shenyubao.javachain.llms;
+package com.shenyubao.javachain.llms.vector;
 
 import com.shenyubao.javachain.chain.retrievalqa.RetrievalQA;
 import com.shenyubao.javachain.embeddings.OpenAIEmbeddings;
+import com.shenyubao.javachain.llms.OpenAI;
 import com.shenyubao.javachain.vectorstore.MilvusStore;
 import org.junit.jupiter.api.Test;
 

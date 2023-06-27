@@ -1,5 +1,6 @@
-package com.shenyubao.javachain.llms;
+package com.shenyubao.javachain.llms.llm;
 
+import com.shenyubao.javachain.llms.AzureOpenAI;
 import com.shenyubao.javachain.llms.sse.OpenAIConsoleStreamListener;
 import org.junit.jupiter.api.Test;
 
