@@ -13,24 +13,24 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper=false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class LangChainException extends RuntimeException {
+public class JavaChainException extends RuntimeException {
 
     private String msg;
     private int code;
 
-    public LangChainException(IError error) {
+    public JavaChainException(IError error) {
         super(error.msg());
         this.code = error.code();
         this.msg = error.msg();
     }
 
-    public LangChainException(IError error, String messageDetail) {
+    public JavaChainException(IError error, String messageDetail) {
         super(error.msg());
         this.code = error.code();
         this.msg = error.msg() + " ,detail: " + messageDetail;
     }
 
-    public LangChainException(String msg) {
+    public JavaChainException(String msg) {
         super(msg);
         this.code = CommonError.SYS_ERROR.code();
         this.msg = msg;

@@ -1,7 +1,7 @@
 package com.shenyubao.javachain.vectorstore;
 
 import com.shenyubao.javachain.CommonError;
-import com.shenyubao.javachain.LangChainException;
+import com.shenyubao.javachain.JavaChainException;
 import com.shenyubao.javachain.chatclient.embedding.Embedding;
 import com.shenyubao.javachain.indexes.Document;
 import io.milvus.client.MilvusServiceClient;
@@ -95,7 +95,7 @@ public class MilvusStore extends VectorStore {
             log.info("[VECTOR] Create Milvus Success");
         } else {
             log.error("[VECTOR] Create Milvus Failed:{}", rpcStatusR.getMessage());
-            throw new LangChainException(CommonError.SYS_ERROR, "on create milvus collection");
+            throw new JavaChainException(CommonError.SYS_ERROR, "on create milvus collection");
         }
     }
 
@@ -181,7 +181,7 @@ public class MilvusStore extends VectorStore {
 
         R<SearchResults> search = milvusClient.search(searchParam);
         if (search.getStatus() != R.Status.Success.getCode()) {
-            throw new LangChainException(CommonError.VECTOR_ERROR, search.getMessage());
+            throw new JavaChainException(CommonError.VECTOR_ERROR, search.getMessage());
         }
 
         if (search.getData() == null || search.getData().getResults() == null) {

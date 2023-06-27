@@ -3,7 +3,7 @@ package com.shenyubao.javachain.llms;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shenyubao.javachain.CommonError;
 import com.shenyubao.javachain.chatclient.ChatClient;
-import com.shenyubao.javachain.LangChainException;
+import com.shenyubao.javachain.JavaChainException;
 import com.shenyubao.javachain.chatclient.completion.chat.ChatCompletionChoice;
 import com.shenyubao.javachain.chatclient.completion.chat.ChatCompletionRequest;
 import com.shenyubao.javachain.chatclient.completion.chat.ChatCompletionResult;
@@ -68,7 +68,7 @@ public class OpenAI extends BaseLLM {
 
             super.streamPredict(promptValues, eventSourceListener);
         } catch (Exception e) {
-            throw new LangChainException(CommonError.PARAM_ERROR, e.getMessage());
+            throw new JavaChainException(CommonError.PARAM_ERROR, e.getMessage());
         }
     }
 
@@ -125,7 +125,7 @@ public class OpenAI extends BaseLLM {
             case "system":
                 return Message.Role.SYSTEM.getName();
             default:
-                throw new LangChainException(CommonError.NOT_SUPPORT);
+                throw new JavaChainException(CommonError.NOT_SUPPORT);
         }
     }
 

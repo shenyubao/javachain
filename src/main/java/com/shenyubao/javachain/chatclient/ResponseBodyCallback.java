@@ -1,7 +1,7 @@
 package com.shenyubao.javachain.chatclient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shenyubao.javachain.LangChainException;
+import com.shenyubao.javachain.JavaChainException;
 import com.shenyubao.javachain.SSEFormatException;
 import io.reactivex.FlowableEmitter;
 import okhttp3.ResponseBody;
@@ -43,9 +43,9 @@ public class ResponseBodyCallback implements Callback<ResponseBody> {
                 if (errorBody == null) {
                     throw e;
                 } else {
-                    LangChainException error = mapper.readValue(
+                    JavaChainException error = mapper.readValue(
                             errorBody.string(),
-                            LangChainException.class
+                            JavaChainException.class
                     );
                     throw error;
                 }

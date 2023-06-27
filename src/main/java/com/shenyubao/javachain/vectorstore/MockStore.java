@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Data
 @EqualsAndHashCode(callSuper=false)
 public class MockStore extends VectorStore{
-    private String collectionName = "langchainjava";
+    private String collectionName = "javachain";
     private Embeddings embedding;
     private List<Document> collection = new ArrayList<>();
 

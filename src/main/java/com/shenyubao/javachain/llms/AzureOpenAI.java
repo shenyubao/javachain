@@ -3,7 +3,7 @@ package com.shenyubao.javachain.llms;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.shenyubao.javachain.CommonError;
-import com.shenyubao.javachain.LangChainException;
+import com.shenyubao.javachain.JavaChainException;
 import com.shenyubao.javachain.chatclient.ChatClient;
 import com.shenyubao.javachain.chatclient.completion.chat.ChatCompletionChoice;
 import com.shenyubao.javachain.chatclient.completion.chat.ChatCompletionRequest;
@@ -68,7 +68,7 @@ public class AzureOpenAI extends BaseLLM {
 
             super.streamPredict(promptValues, eventSourceListener);
         } catch (Exception e) {
-            throw new LangChainException(CommonError.PARAM_ERROR, e.getMessage());
+            throw new JavaChainException(CommonError.PARAM_ERROR, e.getMessage());
         }
     }
 
@@ -89,7 +89,7 @@ public class AzureOpenAI extends BaseLLM {
 
             Response response = chatClient.getClient().newCall(request).execute();
             if (!response.isSuccessful()) {
-                throw new LangChainException(CommonError.PARAM_ERROR, response.message());
+                throw new JavaChainException(CommonError.PARAM_ERROR, response.message());
             }
 
             // 将响应结果序列化为JSON格式
@@ -101,7 +101,7 @@ public class AzureOpenAI extends BaseLLM {
                     chatCompletionResult.getUsage().getTotalTokens()
             );
         } catch (Exception e) {
-            throw new LangChainException(CommonError.PARAM_ERROR, e.getMessage());
+            throw new JavaChainException(CommonError.PARAM_ERROR, e.getMessage());
 
         }
 
@@ -133,7 +133,7 @@ public class AzureOpenAI extends BaseLLM {
             case "system":
                 return Message.Role.SYSTEM.getName();
             default:
-                throw new LangChainException(CommonError.NOT_SUPPORT);
+                throw new JavaChainException(CommonError.NOT_SUPPORT);
         }
     }
 

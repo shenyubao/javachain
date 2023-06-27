@@ -45,7 +45,5 @@ public class MilvusStoreTest {
         //qa问答
         String answer = qa.call("OPENAPI有接口大小限制不，有的话是多少");
         System.out.println(answer);
-
-        //TODO: 1. 优化训练时的向量化速度，
     }
 }

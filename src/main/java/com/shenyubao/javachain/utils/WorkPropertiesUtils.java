@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class WorkPropertiesUtils {
 
-    private static final String PROPERTIES_FILE_NAME = "langchainjava";
+    private static final String PROPERTIES_FILE_NAME = "javachain";
     private static final PropertiesUtils PROPERTIES_UTILS = new PropertiesUtils(PROPERTIES_FILE_NAME);
 
     /**
