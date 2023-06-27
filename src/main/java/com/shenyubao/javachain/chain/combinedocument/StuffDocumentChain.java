@@ -2,7 +2,7 @@ package com.shenyubao.javachain.chain.combinedocument;
 
 import com.shenyubao.javachain.chain.Chain;
 import com.shenyubao.javachain.chain.LLMChain;
-import com.shenyubao.javachain.indexes.Document;
+import com.shenyubao.javachain.connection.retriever.Document;
 import com.shenyubao.javachain.prompt.template.BasePromptTemplate;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

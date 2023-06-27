@@ -1,8 +1,8 @@
 package com.shenyubao.javachain.llms;
 
 import com.shenyubao.javachain.chain.retrievalqa.RetrievalQA;
-import com.shenyubao.javachain.embeddings.OpenAIEmbeddings;
-import com.shenyubao.javachain.vectorstore.MockStore;
+import com.shenyubao.javachain.connection.embeddings.OpenAIEmbeddings;
+import com.shenyubao.javachain.connection.vectorstore.MockStore;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

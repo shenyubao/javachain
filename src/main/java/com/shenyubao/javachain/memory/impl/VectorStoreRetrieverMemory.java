@@ -1,7 +1,7 @@
 package com.shenyubao.javachain.memory.impl;
 
-import com.shenyubao.javachain.indexes.Document;
-import com.shenyubao.javachain.indexes.VectorStoreRetriever;
+import com.shenyubao.javachain.connection.retriever.Document;
+import com.shenyubao.javachain.connection.retriever.VectorStoreRetriever;
 import com.shenyubao.javachain.memory.BaseMemory;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
