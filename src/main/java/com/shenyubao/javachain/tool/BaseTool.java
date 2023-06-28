@@ -39,5 +39,23 @@ public abstract class BaseTool {
         return run(toolInput, null);
     }
 
-    public abstract ToolExecuteResult run(String toolInput, BaseCallbackManager callbackManager);
+    public ToolExecuteResult run(String toolInput, BaseCallbackManager callbackManager) {
+        if(callbackManager != null) {
+            callbackManager.onToolStart(toolInput);
+        }
+        try {
+            ToolExecuteResult toolExecuteResult = run(toolInput);
+
+            if(callbackManager != null) {
+                callbackManager.onToolEnd(toolExecuteResult);
+            }
+
+            return toolExecuteResult;
+        } catch (Throwable e) {
+            if(callbackManager != null) {
+                callbackManager.onToolError(e);
+            }
+            throw e;
+        }
+    }
 }

@@ -27,6 +27,7 @@ public class Docx2txtLoader extends BaseLoader{
         for (Document document: documentList){
             document.setDatasetID(dataSetId);
         }
+        documentList = onTransformer(documentList);
         return documentList;
     }
 }
