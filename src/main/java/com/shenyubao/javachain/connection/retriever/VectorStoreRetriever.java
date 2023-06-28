@@ -17,20 +17,10 @@ public class VectorStoreRetriever extends BaseRetriever{
     private VectorStore vectorStore;
     private String searchType = "similarity";
 
-    private Integer recommendCount = 3;
-
     @Override
-    public List<Document> getRelevantDocuments(String query) {
+    public List<Document> getRelevantDocuments(String datasetId, String query, int recommendCount) {
         if(searchType.equals("similarity")) {
-            return vectorStore.similaritySearch(query, recommendCount);
-        }
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<Document> getRelevantDocuments(String query, int recommendCount) {
-        if(searchType.equals("similarity")) {
-            return vectorStore.similaritySearch(query, recommendCount);
+            return vectorStore.similaritySearch(datasetId, query, recommendCount);
         }
         return new ArrayList<>();
     }

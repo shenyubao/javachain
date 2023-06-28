@@ -4,6 +4,7 @@ import com.shenyubao.javachain.llms.chatclient.embedding.Embedding;
 import com.shenyubao.javachain.connection.retriever.Document;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -13,7 +14,7 @@ import java.util.stream.IntStream;
  */
 public abstract class Embeddings {
     public List<Document> embedTexts(List<String> texts) {
-        List<Document> documents = IntStream.range(0, texts.size()).mapToObj(i -> new Document(i, texts.get(i))).collect(Collectors.toList());
+        List<Document> documents = IntStream.range(0, texts.size()).mapToObj(i -> new Document(texts.get(i))).collect(Collectors.toList());
         return embedDocument(documents);
     }
 

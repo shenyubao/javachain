@@ -5,6 +5,7 @@ import com.shenyubao.javachain.connection.retriever.BaseRetriever;
 import com.shenyubao.javachain.connection.retriever.Document;
 import com.shenyubao.javachain.connection.retriever.VectorStoreRetriever;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +27,10 @@ public abstract class VectorStore {
      */
     public void addTexts(List<String> texts) {
         List<Document> documents = new ArrayList<>();
-        for (int i=0; i< texts.size();i++){
+        for (int i = 0; i < texts.size(); i++) {
             Document document = new Document();
             document.setPageContent(texts.get(i));
             document.setIndex(i);
-            document.setUniqueId(UUID.randomUUID().toString());
             document.setEmbedding(embedding.embedQuery(texts.get(i)).getEmbedding());
             documents.add(document);
         }
@@ -39,10 +39,13 @@ public abstract class VectorStore {
 
     /**
      * 通过嵌入运行更多文档并添加到vectorstore
+     * String datasetId
      *
      * @param documents
      */
-    public abstract void addDocuments(List<Document> documents);
+    public abstract List<String> addDocuments(List<Document> documents);
+
+    public abstract Boolean removeDocuments(List<String> documentIds);
 
     /**
      * 返回与查询最相似的文档
@@ -51,7 +54,7 @@ public abstract class VectorStore {
      * @param k
      * @return
      */
-    public abstract List<Document> similaritySearch(String query, int k);
+    public abstract List<Document> similaritySearch(String datasetId, String query, int k);
 
     public BaseRetriever asRetriever() {
         VectorStoreRetriever retriever = new VectorStoreRetriever();

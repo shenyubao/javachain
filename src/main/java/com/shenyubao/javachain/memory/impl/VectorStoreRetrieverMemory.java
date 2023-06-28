@@ -39,7 +39,7 @@ public class VectorStoreRetrieverMemory extends BaseMemory {
     @Override
     public Map<String, Object> loadMemoryVariables(Map<String, Object> inputs) {
         String query = (String) inputs.get(inputKey);
-        List<Document> docs = retriever.getRelevantDocuments(query, retriever.getRecommendCount());
+        List<Document> docs = retriever.getRelevantDocuments(query);
         String result = docs.stream().map(e -> e.getPageContent()).collect(Collectors.joining("\n"));
         Map<String, Object> output = new HashMap<>();
         output.put(memoryKey, result);

@@ -1,5 +1,6 @@
 package com.shenyubao.javachain.chain;
 
+import com.shenyubao.javachain.JavaChainConstant;
 import com.shenyubao.javachain.llms.BaseLLM;
 import com.shenyubao.javachain.model.Generation;
 import com.shenyubao.javachain.model.LLMResult;
@@ -28,7 +29,6 @@ public class LLMChain extends Chain {
      */
     private BaseLLM llm;
 
-    private String outputKey = "text";
 
     @Override
     public List<String> getInputKeys() {
@@ -37,23 +37,22 @@ public class LLMChain extends Chain {
 
     @Override
     public List<String> getOutputKeys() {
-        return Collections.singletonList(outputKey);
+        return Collections.singletonList(JavaChainConstant.CHAIN_PARAM_RESULT);
     }
 
     @Override
     protected Map<String, Object> onCall(Map<String, Object> inputs) {
 
         try {
-            Map<String, Object> outputs = new HashMap<>();
             List<PromptValue> promptValues = Collections.singletonList(inputs).stream()
                     .map(input -> prompt.formatPrompt(input)).collect(Collectors.toList());
             LLMResult llmResult = llm.predict(promptValues);
             if (llmResult.getGenerations().size() > 0) {
                 List<Generation> generations = llmResult.getGenerations();
                 String text = generations.get(0).getText();
-                outputs.put(outputKey, text);
+                inputs.put(JavaChainConstant.CHAIN_PARAM_RESULT, text);
             }
-            return outputs;
+            return inputs;
         } catch (Throwable e) {
             throw e;
         }

@@ -1,5 +1,6 @@
 package com.shenyubao.javachain.chain.combinedocument;
 
+import com.shenyubao.javachain.JavaChainConstant;
 import com.shenyubao.javachain.chain.Chain;
 import com.shenyubao.javachain.chain.LLMChain;
 import com.shenyubao.javachain.connection.retriever.Document;
@@ -25,23 +26,20 @@ public class StuffDocumentChain extends Chain {
 
     private String documentSeparator = "\n\n";
 
-    private String inputKey = "input_documents";
-    private String outputKey = "output_text";
-
     @Override
     public List<String> getInputKeys() {
-        return Arrays.asList(new String[]{inputKey});
+        return Arrays.asList(JavaChainConstant.CHAIN_PARAM_INPUT_DOCUMENTS);
     }
 
     @Override
     public List<String> getOutputKeys() {
-        return Arrays.asList(new String[]{outputKey});
+        return Arrays.asList(JavaChainConstant.CHAIN_PARAM_RESULT_DOCUMENT);
     }
 
     @Override
     protected Map<String, Object> onCall(Map<String, Object> inputs) {
         try {
-            List<Document> documents = (List<Document>) inputs.get(inputKey);
+            List<Document> documents = (List<Document>) inputs.get(JavaChainConstant.CHAIN_PARAM_INPUT_DOCUMENTS);
             String question = (String) inputs.get("question");
             Map<String, Object> outputs = combineDocs(documents, question);
 

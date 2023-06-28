@@ -11,17 +11,17 @@ import io.milvus.param.collection.CreateCollectionParam;
 import io.milvus.param.collection.DescribeCollectionParam;
 import io.milvus.param.collection.FieldType;
 import io.milvus.param.collection.LoadCollectionParam;
+import io.milvus.param.dml.DeleteParam;
 import io.milvus.param.dml.InsertParam;
 import io.milvus.param.dml.SearchParam;
 import io.milvus.param.index.CreateIndexParam;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -44,10 +44,8 @@ public class MilvusStore extends VectorStore {
     private MilvusServiceClient milvusClient;
 
     private FieldType fieldId = FieldType.newBuilder().withName("id").withDataType(DataType.Int64).withPrimaryKey(true).withAutoID(true).build();
-    private FieldType fieldContentId = FieldType.newBuilder().withName("contentId").withDataType(DataType.VarChar).withMaxLength(512).build();
-    private FieldType fieldType = FieldType.newBuilder().withName("type").withDataType(DataType.Int32).build();
-    private FieldType fieldContent = FieldType.newBuilder().withName("content").withDataType(DataType.FloatVector).withDimension(dimension).build();
-    private FieldType fieldIdx = FieldType.newBuilder().withName("idx").withDataType(DataType.Int32).build();
+    private FieldType fieldDatasetId = FieldType.newBuilder().withName("datasetId").withDataType(DataType.VarChar).withMaxLength(512).build();
+    private FieldType fieldEmbedding = FieldType.newBuilder().withName("embedding").withDataType(DataType.FloatVector).withDimension(dimension).build();
     private FieldType fieldRowContent = FieldType.newBuilder().withName("rowContent").withDataType(DataType.VarChar).withMaxLength(4096).build();
 
     public MilvusStore(String endpoint, String apiKey) {
@@ -59,7 +57,7 @@ public class MilvusStore extends VectorStore {
     @Override
     public void init() {
         Boolean collectionExist = isCollectionExist();
-        if (!collectionExist){
+        if (!collectionExist) {
             checkAndCreateCollection();
             createIndex();
             loadCollection();
@@ -86,7 +84,7 @@ public class MilvusStore extends VectorStore {
         CreateCollectionParam createCollectionParam = CreateCollectionParam
                 .newBuilder()
                 .withCollectionName(collectionName)
-                .addFieldType(fieldId).addFieldType(fieldContentId).addFieldType(fieldType).addFieldType(fieldContent).addFieldType(fieldIdx).addFieldType(fieldRowContent)
+                .addFieldType(fieldId).addFieldType(fieldDatasetId).addFieldType(fieldEmbedding).addFieldType(fieldRowContent)
                 .build();
 
         log.info("[VECTOR] Create Milvus Collection: {}, Schema:{}", collectionName, createCollectionParam);
@@ -106,7 +104,7 @@ public class MilvusStore extends VectorStore {
         R<RpcStatus> indexR = milvusClient.createIndex(
                 CreateIndexParam.newBuilder()
                         .withCollectionName(collectionName)
-                        .withFieldName(fieldContent.getName())
+                        .withFieldName(fieldEmbedding.getName())
                         .withIndexType(INDEX_TYPE)
                         .withMetricType(MetricType.IP)
                         .withSyncMode(Boolean.TRUE)
@@ -128,26 +126,27 @@ public class MilvusStore extends VectorStore {
     }
 
     @Override
-    public void addDocuments(List<Document> documents) {
+    public List<String> addDocuments(List<Document> documents) {
         List<InsertParam.Field> fields = new ArrayList<>();
-        List<String> listContentID = new ArrayList<>();
-        List<Integer> listType = new ArrayList<>();
-        List<List<Float>> listContent = new ArrayList<>();
-        List<Integer> listIdx = new ArrayList<>();
+        List<String> listDatasetId = new ArrayList<>();
+        List<List<Float>> listEmbedding = new ArrayList<>();
         List<String> listRowContent = new ArrayList<>();
 
         for (Document document : documents) {
-            listContentID.add(document.getUniqueId());
-            listContent.add(document.getEmbedding());
-            listIdx.add(document.getIndex());
+            // 向量化
+            if (document.getEmbedding() == null) {
+                document.setEmbedding(getEmbedding().embedQuery(document.getPageContent()).getEmbedding());
+            } else {
+                document.setEmbedding(document.getEmbedding());
+            }
+
+            listEmbedding.add(document.getEmbedding());
+            listDatasetId.add(document.getDatasetID());
             listRowContent.add(document.getPageContent());
-            listType.add(1);
         }
 
-        fields.add(new InsertParam.Field(fieldContentId.getName(), listContentID));
-        fields.add(new InsertParam.Field(fieldType.getName(), listType));
-        fields.add(new InsertParam.Field(fieldContent.getName(), listContent));
-        fields.add(new InsertParam.Field(fieldIdx.getName(), listIdx));
+        fields.add(new InsertParam.Field(fieldDatasetId.getName(), listDatasetId));
+        fields.add(new InsertParam.Field(fieldEmbedding.getName(), listEmbedding));
         fields.add(new InsertParam.Field(fieldRowContent.getName(), listRowContent));
 
         InsertParam insertParam = InsertParam.newBuilder()
@@ -157,18 +156,35 @@ public class MilvusStore extends VectorStore {
         R<MutationResult> insertR = milvusClient.insert(insertParam);
         if (insertR.getStatus().equals(R.Status.Success.getCode())) {
             log.info("[VECTOR] Insert Documents Success, size:{}", documents.size());
+            List<Long> ids = insertR.getData().getIDs().getIntId().getDataList();
+            return ids.stream().map(Object::toString).collect(Collectors.toList());
+
         } else {
-            log.error("[VECTOR] Create Milvus Failed:{}", insertR.getMessage());
+            log.error("[VECTOR] Insert Documents Failed:{}", insertR.getMessage());
+            return new ArrayList<>();
         }
     }
 
     @Override
-    public List<Document> similaritySearch(String query, int SEARCH_K) {
+    public Boolean removeDocuments(List<String> documentIds) {
+        String DOCUMENT_EXPR = String.join(",", documentIds);
+        String DELETE_EXPR = String.format("%s in [%s]", fieldId.getName(), DOCUMENT_EXPR);
+        DeleteParam deleteParam = DeleteParam.newBuilder()
+                .withCollectionName(collectionName)
+                .withExpr(DELETE_EXPR)
+                .build();
+        R<MutationResult> deleteR = milvusClient.delete(deleteParam);
+        log.info("[VECTOR] Remove Documents:{}", deleteR);
+        return deleteR.getStatus().equals(R.Status.Success.getCode());
+    }
+
+    @Override
+    public List<Document> similaritySearch(String datasetId, String query, int SEARCH_K) {
         Embedding embedding = getEmbedding().embedQuery(query);
-        List<String> search_output_fields = Arrays.asList(fieldIdx.getName(), fieldRowContent.getName());
+        List<String> search_output_fields = Arrays.asList(fieldId.getName(), fieldRowContent.getName());
         log.info("[VECTOR] Searching: " + query);
 
-//        String SEARCH_PARAM= "";
+        String expr = String.format("%s == \"%s\"", fieldDatasetId.getName(), datasetId);
 
         SearchParam searchParam = SearchParam.newBuilder()
                 .withCollectionName(collectionName)
@@ -176,7 +192,8 @@ public class MilvusStore extends VectorStore {
                 .withOutFields(search_output_fields)
                 .withTopK(SEARCH_K)
                 .withVectors(Collections.singletonList(embedding.getEmbedding()))
-                .withVectorFieldName(fieldContent.getName())
+                .withVectorFieldName(fieldEmbedding.getName())
+                .withExpr(expr)
                 .build();
 
         R<SearchResults> search = milvusClient.search(searchParam);
@@ -189,11 +206,11 @@ public class MilvusStore extends VectorStore {
         }
 
         log.info("[VECTOR] Searching Result: " + search.getData().getResults().getFieldsDataList());
-        List<Integer> listIdx = new ArrayList<>();
+        List<Long> listIdx = new ArrayList<>();
         List<String> listData = new ArrayList<>();
         for (FieldData fieldData : search.getData().getResults().getFieldsDataList()) {
-            if (fieldData.getFieldName().equals(fieldIdx.getName())) {
-                listIdx.addAll(fieldData.getScalars().getIntData().getDataList());
+            if (fieldData.getFieldName().equals(fieldId.getName())) {
+                listIdx.addAll(fieldData.getScalars().getLongData().getDataList());
             }
             if (fieldData.getFieldName().equals(fieldRowContent.getName())) {
                 listData.addAll(fieldData.getScalars().getStringData().getDataList());
@@ -201,7 +218,7 @@ public class MilvusStore extends VectorStore {
         }
 
         return IntStream.range(0, listIdx.size())
-                .mapToObj(i -> new Document(listIdx.get(i), listData.get(i)))
+                .mapToObj(i -> new Document(listIdx.get(i).toString(), listData.get(i)))
                 .collect(Collectors.toList());
     }
 }

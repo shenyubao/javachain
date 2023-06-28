@@ -16,15 +16,16 @@ import java.util.stream.Collectors;
  * @date 2023/6/24 12:23
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class MockStore extends VectorStore{
+@EqualsAndHashCode(callSuper = false)
+public class MockStore extends VectorStore {
     private String collectionName = "javachain";
     private Embeddings embedding;
     private List<Document> collection = new ArrayList<>();
 
     @Override
-    public void addDocuments(List<Document> documents) {
+    public List<String> addDocuments(List<Document> documents) {
         collection.addAll(embedding.embedDocument(documents));
+        return new ArrayList<>();
     }
 
     @Override
@@ -33,7 +34,13 @@ public class MockStore extends VectorStore{
     }
 
     @Override
-    public List<Document> similaritySearch(String query, int recommendCount) {
+    public Boolean removeDocuments(List<String> documentIds) {
+        return null;
+    }
+
+
+    @Override
+    public List<Document> similaritySearch(String datasetId, String query, int recommendCount) {
         Collections.shuffle(this.collection, new Random());
         return this.collection.stream()
                 .limit(recommendCount)

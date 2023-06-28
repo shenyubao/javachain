@@ -12,23 +12,47 @@ import java.util.Map;
  */
 @Data
 public class Document {
-    private String uniqueId;
+    /**
+     * 文档的唯一ID
+     */
+    private String id;
 
+    /**
+     * 文档正文内容
+     */
     @JSONField(name="page_content")
     private String pageContent;
 
+    /**
+     * 文档的元数据
+     */
     @JSONField(name="metadata")
     private Map<String, Object> metadata;
 
+    /**
+     * 文档的向量化结果
+     */
     private List<Float> embedding;
 
+    /**
+     * 文档的排序
+     */
     private Integer index;
+
+    /**
+     * 文档的知识库ID
+     */
+    private String datasetID;
 
     public Document() {
     }
 
-    public Document(Integer index, String pageContent) {
+    public Document(String id, String pageContent) {
+        this.id = id;
         this.pageContent = pageContent;
-        this.index = index;
+    }
+
+    public Document(String pageContent) {
+        this.pageContent = pageContent;
     }
 }

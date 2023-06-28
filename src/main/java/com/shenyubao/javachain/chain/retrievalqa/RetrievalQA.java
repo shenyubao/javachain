@@ -1,5 +1,6 @@
 package com.shenyubao.javachain.chain.retrievalqa;
 
+import com.shenyubao.javachain.JavaChainConstant;
 import com.shenyubao.javachain.llms.BaseLLM;
 import com.shenyubao.javachain.chain.Chain;
 import com.shenyubao.javachain.chain.LLMChain;
@@ -10,6 +11,8 @@ import com.shenyubao.javachain.prompt.PromptConstants;
 import com.shenyubao.javachain.prompt.template.PromptTemplate;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.SerializationUtils;
 
 import java.util.*;
 
@@ -18,7 +21,7 @@ import java.util.*;
  * @date 2023/6/24 12:35
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class RetrievalQA extends Chain {
     private StuffDocumentChain stuffDocumentChain;
     private BaseLLM llm;
@@ -37,7 +40,7 @@ public class RetrievalQA extends Chain {
     private BaseRetriever retriever;
 
     public void init(boolean isCH) {
-        if(prompt == null) {
+        if (prompt == null) {
             prompt = (isCH ? PromptConstants.QA_PROMPT_CH : PromptConstants.QA_PROMPT_EN);
         }
         LLMChain llmChain = new LLMChain();
@@ -71,15 +74,15 @@ public class RetrievalQA extends Chain {
 
     @Override
     protected Map<String, Object> onCall(Map<String, Object> inputs) {
-        String question = (String)inputs.get("question");
-        List<Document> documents = getDocs(question);
-        Map<String, Object> combineInputs = new HashMap<>();
-        combineInputs.put("input_documents", documents);
-        combineInputs.put("question", question);
-        return stuffDocumentChain.call(combineInputs);
+        String question = (String) inputs.get(JavaChainConstant.CHAIN_PARAM_QUESTION);
+        String datasetId = (String) inputs.get(JavaChainConstant.CHAIN_PARAM_DATASET);
+        List<Document> documents = getDocs(datasetId, question);
+        inputs.put(JavaChainConstant.CHAIN_PARAM_INPUT_DOCUMENTS, documents);
+        inputs.put(JavaChainConstant.CHAIN_PARAM_QUESTION, question);
+        return stuffDocumentChain.call(inputs);
     }
 
-    private List<Document> getDocs(String question) {
-        return retriever.getRelevantDocuments(question, recommendDocumentCount);
+    private List<Document> getDocs(String datasetId, String question) {
+        return retriever.getRelevantDocuments(datasetId, question, recommendDocumentCount);
     }
 }

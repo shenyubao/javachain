@@ -1,5 +1,6 @@
 package com.shenyubao.javachain.connection.loader;
 
+import com.shenyubao.javachain.JavaChainConstant;
 import com.shenyubao.javachain.connection.retriever.Document;
 
 import java.util.List;
@@ -14,5 +15,9 @@ public abstract class BaseLoader {
      *
      * @return
      */
-    public abstract List<Document> load();
+    public abstract List<Document> load(String datasetID);
+
+    public List<Document> load() {
+        return load(JavaChainConstant.DEFAULT_DATASET);
+    }
 }
