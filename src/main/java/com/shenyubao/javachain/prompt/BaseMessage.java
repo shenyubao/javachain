@@ -15,4 +15,11 @@ public abstract class BaseMessage {
     private Map<String, Object> addtionalKwargs;
 
     public abstract String getType();
+
+    public BaseMessage() {
+    }
+
+    public BaseMessage(String content) {
+        this.content = content;
+    }
 }

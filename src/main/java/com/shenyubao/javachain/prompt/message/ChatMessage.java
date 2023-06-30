@@ -18,4 +18,13 @@ public class ChatMessage extends BaseMessage {
     public String getType() {
         return "chat";
     }
+
+    public ChatMessage(String content) {
+        super(content);
+    }
+
+    public ChatMessage(){
+        super();
+    }
+
 }

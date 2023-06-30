@@ -75,6 +75,8 @@ public class OpenAI extends BaseLLM {
 
     @Override
     protected LLMResult doPredict(List<PromptValue> promptValues) {
+        log.info("[LLM] LLM Content After Template Render:{}", promptValues);
+
         ChatCompletion chatCompletion = converToChatCompletion(promptValues);
         ChatCompletionRequest chatCompletionRequest = convertToRequest(chatCompletion);
 

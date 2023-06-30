@@ -19,8 +19,6 @@ public abstract class BaseChatMemory extends BaseMemory{
 
     private String inputKey;
 
-    private boolean returnMessages;
-
     public void saveContext(Map<String, Object> inputs, Map<String, Object> outputs) {
         String inputStr = getPromptInputKey(inputs);
         String outputStr = null;

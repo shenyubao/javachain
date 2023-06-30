@@ -11,4 +11,11 @@ public class SystemMessage extends BaseMessage {
     public String getType() {
         return "system";
     }
+
+    public SystemMessage(String content) {
+        super(content);
+    }
+
+    public SystemMessage() {
+    }
 }

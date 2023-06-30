@@ -41,10 +41,6 @@ public class ConversationBufferMemory extends BaseChatMemory {
     }
 
     public Object buffer() {
-        if (isReturnMessages()) {
-            return getChatMemory().getMessages();
-        } else {
-            return Methods.getBufferString(getChatMemory().getMessages(), humanPrefix, aiPrefix);
-        }
+        return Methods.getBufferString(getChatMemory().getMessages(), humanPrefix, aiPrefix);
     }
 }

@@ -7,6 +7,15 @@ import com.shenyubao.javachain.prompt.BaseMessage;
  * @date 2023/6/24 00:29
  */
 public class HumanMessage extends BaseMessage {
+
+    public HumanMessage() {
+        super();
+    }
+
+    public HumanMessage(String content) {
+        super(content);
+    }
+
     @Override
     public String getType() {
         return "human";
