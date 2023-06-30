@@ -45,4 +45,16 @@ public class PromptConstants {
     public static final PromptTemplate QA_PROMPT_EN = new PromptTemplate(QA_PROMPT_TEMPLATE_EN);
     public static final PromptTemplate QA_PROMPT_CH = new PromptTemplate(QA_PROMPT_TEMPLATE_CH);
 
+    public static final String QA_PROMPT_TEMPLATE_CONVERSATION_CH = "请使用以下的上下文来回答最后的问题。如果你不知道答案，就说你不知道，不要试图编造答案。\n" +
+            "\n" +
+            "{documents}\n" +
+            "\n" +
+            "Current conversation:\n" +
+            "{history}\n" +
+            "\n" +
+            "Question: {input}\n" +
+            "Helpful Answer:";
+
+    public static final PromptTemplate QA_CONVERSATION_CH = new PromptTemplate(QA_PROMPT_TEMPLATE_CONVERSATION_CH);
+
 }

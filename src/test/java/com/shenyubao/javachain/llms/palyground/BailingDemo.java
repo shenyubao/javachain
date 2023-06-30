@@ -60,8 +60,16 @@ public class BailingDemo {
 
     @Test
     void test_conversation_knowledge() {
-        // RetrievalChain -> StuffDocumentChain -> LLMChain
-        // 查询知识库       ->  知识库内容渲染       -> 请求大语言模型
+        //  ConversationChain -> RetrievalChain -> StuffDocumentChain -> LLMChain
+        // 渲染历史对话 -> 查询知识库       ->  知识库内容渲染       -> 请求大语言模型
+
+        //  ConversationChain
+        List<BaseMessage> historyMessages = new ArrayList<>();
+        historyMessages.add(new HumanMessage("百灵AI都有哪些产品"));
+        historyMessages.add(new AIMessage("百灵AI有企业端和用户端，每个端都提供Chat工作台与浏览器插件"));
+
+        ConversationChain conversation = new ConversationChain();
+        conversation.setMessages(historyMessages);
 
         //  RetrievalChain
         MilvusStore milvusStore = new MilvusStore(milvus_endpoint,milvus_apiKey);
@@ -80,13 +88,13 @@ public class BailingDemo {
         OpenAI openAI = new OpenAI(endpoint,apiKey);
 
         LLMChain llmChain = new LLMChain();
-        llmChain.setPrompt(PromptConstants.QA_PROMPT_CH);
+        llmChain.setPrompt(PromptConstants.QA_CONVERSATION_CH);
         llmChain.setLlm(openAI);
         llmChain.setVerbose(true);
 
         // 构建问题
         SequentialChain sequentialChain = new SequentialChain();
-        sequentialChain.setChains(Arrays.asList(retrievalChain, stuffDocumentChain, llmChain));
+        sequentialChain.setChains(Arrays.asList(conversation, retrievalChain, stuffDocumentChain, llmChain));
         String response = sequentialChain.call("百灵AI的浏览器插件是做什么的");
         System.out.println(response);
 
