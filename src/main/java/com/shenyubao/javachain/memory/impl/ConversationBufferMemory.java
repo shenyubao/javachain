@@ -1,5 +1,6 @@
 package com.shenyubao.javachain.memory.impl;
 
+import com.shenyubao.javachain.chain.ChainContext;
 import com.shenyubao.javachain.memory.BaseChatMemory;
 import com.shenyubao.javachain.utils.Methods;
 import lombok.Data;
@@ -34,13 +35,8 @@ public class ConversationBufferMemory extends BaseChatMemory {
     }
 
     @Override
-    public Map<String, Object> loadMemoryVariables(Map<String, Object> inputs) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(memoryKey, buffer());
-        return map;
-    }
-
-    public Object buffer() {
+    public Object loadMemoryVariables(ChainContext context) {
         return Methods.getBufferString(getChatMemory().getMessages(), humanPrefix, aiPrefix);
     }
+
 }

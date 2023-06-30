@@ -56,7 +56,7 @@ public class StdOutCallbackHandler implements BaseCallbackHandler {
     }
 
     @Override
-    public void onLlmStart(List<PromptValue> serialized) {
+    public void onLlmStart(PromptValue serialized) {
         String traceId = getContext();
         if (traceId == null) {
             traceId = UUID.randomUUID().toString();

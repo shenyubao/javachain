@@ -30,29 +30,19 @@ public class PromptConstants {
      */
     public static final String QA_PROMPT_TEMPLATE_EN = "Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.\n" +
             "\n" +
-            "{context}\n" +
+            "{documents}\n" +
             "\n" +
-            "Question: {question}\n" +
+            "Question: {input}\n" +
             "Helpful Answer:";
 
     public static final String QA_PROMPT_TEMPLATE_CH = "请使用以下的上下文来回答最后的问题。如果你不知道答案，就说你不知道，不要试图编造答案。\n" +
             "\n" +
-            "{context}\n" +
+            "{documents}\n" +
             "\n" +
-            "Question: {question}\n" +
+            "Question: {input}\n" +
             "Helpful Answer:";
 
     public static final PromptTemplate QA_PROMPT_EN = new PromptTemplate(QA_PROMPT_TEMPLATE_EN);
     public static final PromptTemplate QA_PROMPT_CH = new PromptTemplate(QA_PROMPT_TEMPLATE_CH);
 
-
-    public static final String QA_SYSTEM_PROMPT_TEMPLATE_EN = "Use the following pieces of context to answer the users question. \n" +
-            "If you don't know the answer, just say that you don't know, don't try to make up an answer.\n" +
-            "----------------\n" +
-            "{context}";
-
-    public static final String QA_SYSTEM_PROMPT_TEMPLATE_CH = "使用以下上下文来回答用户的问题。 \n" +
-            "如果你不知道答案，就说你不知道，不要试图编造答案。\n" +
-            "----------------\n" +
-            "{context}";
 }

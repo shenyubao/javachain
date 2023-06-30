@@ -1,7 +1,7 @@
 package com.shenyubao.javachain.llms;
 
 import com.shenyubao.javachain.JavaChainConstant;
-import com.shenyubao.javachain.chain.retrievalqa.RetrievalQA;
+import com.shenyubao.javachain.chain.extend.RetrievalChain;
 import com.shenyubao.javachain.connection.embeddings.OpenAIEmbeddings;
 import com.shenyubao.javachain.connection.loader.Docx2txtLoader;
 import com.shenyubao.javachain.connection.retriever.Document;
@@ -22,7 +22,7 @@ public class EmbeddingTest {
         String endpoint = "https://api.gptmf.top/";
         String apiKey = "sk-EqNOl3UM3f0jVKz2C9044f6d3637407eB8D497A636336616";
 
-        //holo数据库知识库向量持久化
+        //数据库知识库向量持久化
         MockStore localStore = new MockStore();
         localStore.setEmbedding(new OpenAIEmbeddings(endpoint, apiKey)); //openai提供的embeddings
         //模拟知识库
@@ -31,11 +31,9 @@ public class EmbeddingTest {
         localStore.addTexts(knowledge);
 
         //知识库向量检索
-        RetrievalQA qa = new RetrievalQA();
-        qa.setLlm(new OpenAI(endpoint, apiKey)); //chatgpt大模型
+        RetrievalChain qa = new RetrievalChain();
         qa.setRetriever(localStore.asRetriever());
         qa.setRecommendDocumentCount(10);
-        qa.init();
 
         //qa问答
         String answer = qa.call("OPENAPI有接口大小限制不，有的话是多少");
@@ -62,19 +60,17 @@ public class EmbeddingTest {
         System.out.println("add documents count:" + documentIds.size());
 
         //知识库向量检索
-        RetrievalQA qa = new RetrievalQA();
-        qa.setLlm(new OpenAI(endpoint, apiKey));
+        RetrievalChain qa = new RetrievalChain();
         qa.setRetriever(vectorStore.asRetriever());
         qa.setRecommendDocumentCount(2);
-        qa.init();
 
         //qa问答
         Map<String, Object> questionMap = new HashMap<>();
         questionMap.put(JavaChainConstant.CHAIN_PARAM_DATASET, "10001");
         questionMap.put(JavaChainConstant.CHAIN_PARAM_QUESTION, "百灵AI的浏览器插件是做什么的");
 
-        Map<String, Object> answer = qa.call(questionMap);
-        System.out.println(answer.get(JavaChainConstant.CHAIN_PARAM_RESULT));
+//        Map<String, Object> answer = qa.call(questionMap);
+//        System.out.println(answer.get(JavaChainConstant.CHAIN_PARAM_RESULT));
 
         //清理向量数据库中的文档
         Boolean isRemoved = vectorStore.removeDocuments(documentIds);

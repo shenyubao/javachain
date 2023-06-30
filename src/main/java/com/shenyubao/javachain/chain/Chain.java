@@ -20,68 +20,48 @@ public abstract class Chain {
     private BaseMemory memory;
 
     /**
-     * 是否打印
+     * 是否打印调试日志
      */
     private boolean verbose;
-
-
-//    public CompletableFuture<String> chatAsync(String question) {
-//        return CompletableFuture.supplyAsync(() -> chat(question));
-//    }
-
-//    public CompletableFuture<Map<String, Object>> runAsync(Map<String, Object> inputs) {
-//        return CompletableFuture.supplyAsync(() -> run(inputs));
-//    }
 
 
     /**
      * chain调用 start
      **/
 
-    public Map<String, Object> call(Map<String, Object> inputs) {
-        prepInputs(inputs);
-        Map<String, Object> output = onCall(inputs);
-        prepOutputs(inputs, output);
+    public ChainContext call(ChainContext context) {
+        prepInputs(context);
+        ChainContext output = onCall(context);
+        prepOutputs(context);
         return output;
     }
 
     public String call(String question) {
-        Map<String, Object> inputs = new HashMap<>();
-        inputs.put("question", question);
-        Map<String, Object> repsonse = call(inputs);
-        return (String) repsonse.get("text");
+        ChainContext chainContext = new ChainContext();
+        chainContext.setInput(question);
+        ChainContext output = call(chainContext);
+        return output.getOutput();
     }
 
-    abstract protected Map<String, Object> onCall(Map<String, Object> inputs);
+    public abstract ChainContext onCall(ChainContext inputs);
 
 //    public CompletableFuture<Map<String, Object>> callAsync(Map<String, Object> inputs) {
 //        return callAsync(inputs, null);
 //    }
 
-    /**
-     * chain调用 end
-     **/
 
-    public abstract List<String> getInputKeys();
-
-    public abstract List<String> getOutputKeys();
-
-    private Map<String, Object> prepInputs(Map<String, Object> inputs) {
-        if (memory != null) {
-            Map<String, Object> external_context = memory.loadMemoryVariables(inputs);
-            inputs.putAll(external_context);
-        }
-        return inputs;
+    private ChainContext prepInputs(ChainContext context) {
+//        if (memory != null) {
+//            Map<String, Object> external_context = memory.loadMemoryVariables(context.getPromptParams());
+//            context.setPromptParams(external_context);
+//        }
+        return context;
     }
 
-    private Map<String, Object> prepOutputs(Map<String, Object> inputs,
-                                            Map<String, Object> outputs) {
-        if (memory != null) {
-            memory.saveContext(inputs, outputs);
-        }
-        Map<String, Object> map = new HashMap<>();
-        map.putAll(inputs);
-        map.putAll(outputs);
-        return map;
+    private ChainContext prepOutputs(ChainContext context) {
+//        if (memory != null) {
+//            memory.saveContext(context);
+//        }
+        return context;
     }
 }

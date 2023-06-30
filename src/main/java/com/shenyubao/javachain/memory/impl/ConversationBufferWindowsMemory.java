@@ -1,6 +1,7 @@
 package com.shenyubao.javachain.memory.impl;
 
 import com.knuddels.jtokkit.api.EncodingType;
+import com.shenyubao.javachain.chain.ChainContext;
 import com.shenyubao.javachain.llms.chatclient.model.ChatCompletion;
 import com.shenyubao.javachain.prompt.BaseMessage;
 import com.shenyubao.javachain.utils.Methods;
@@ -29,25 +30,24 @@ public class ConversationBufferWindowsMemory extends ConversationBufferMemory {
     }
 
     @Override
-    public Map<String, Object> loadMemoryVariables(Map<String, Object> inputs) {
-        List<BaseMessage> windowMessages;
-        if (maxHistoryCount > 0) {
-            List<BaseMessage> messages = (List<BaseMessage>) buffer();
-            if (messages.size() / 2 > maxHistoryCount) {
-                windowMessages = messages.stream().skip(maxHistoryCount * 2).collect(Collectors.toList());
-            } else {
-                windowMessages = messages;
-            }
-        } else {
-            windowMessages = new ArrayList<>();
-        }
-        while (sumToken(windowMessages) > maxTokenCount) {
-            windowMessages = windowMessages.stream().skip(2).collect(Collectors.toList());
-        }
-
-        String bufferStrings = Methods.getBufferString(windowMessages, getHumanPrefix(), getAiPrefix());
-        inputs.put(getMemoryKey(), bufferStrings);
-        return inputs;
+    public Object loadMemoryVariables(ChainContext context) {
+        return null;
+//        List<BaseMessage> windowMessages;
+//        if (maxHistoryCount > 0) {
+//            List<BaseMessage> messages = (List<BaseMessage>) buffer();
+//            if (messages.size() / 2 > maxHistoryCount) {
+//                windowMessages = messages.stream().skip(maxHistoryCount * 2).collect(Collectors.toList());
+//            } else {
+//                windowMessages = messages;
+//            }
+//        } else {
+//            windowMessages = new ArrayList<>();
+//        }
+//        while (sumToken(windowMessages) > maxTokenCount) {
+//            windowMessages = windowMessages.stream().skip(2).collect(Collectors.toList());
+//        }
+//
+//        return Methods.getBufferString(windowMessages, getHumanPrefix(), getAiPrefix());
     }
 
     public Integer sumToken(List<BaseMessage> messages) {
@@ -56,10 +56,7 @@ public class ConversationBufferWindowsMemory extends ConversationBufferMemory {
         return TikTokensUtil.tokens(ChatCompletion.Model.GPT_3_5_TURBO_0613.getName(), bufferStrings);
     }
 
-    @Override
-    public Object buffer() {
-        return getChatMemory().getMessages();
-    }
+
 
     /**
      * TODO: 历史消息暂时由外部传递进来，后续JavaChain自己维护持久化

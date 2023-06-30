@@ -1,5 +1,6 @@
 package com.shenyubao.javachain.memory;
 
+import com.shenyubao.javachain.chain.ChainContext;
 import lombok.Data;
 
 import java.util.List;
@@ -24,15 +25,13 @@ public abstract class BaseMemory {
      * @param inputs
      * @return
      */
-    public abstract Map<String, Object> loadMemoryVariables(Map<String, Object> inputs);
+    public abstract Object loadMemoryVariables(ChainContext context);
 
     /**
      * 将此模型运行的上下文保存到内存中
      *
-     * @param inputs
-     * @param outputs
      */
-    public abstract void saveContext(Map<String, Object> inputs, Map<String, Object> outputs);
+    public abstract void saveContext(ChainContext context);
 
     /**
      * 清除内存内容

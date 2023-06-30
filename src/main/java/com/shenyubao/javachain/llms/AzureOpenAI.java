@@ -51,8 +51,8 @@ public class AzureOpenAI extends BaseLLM {
     }
 
     @Override
-    public void streamPredict(List<PromptValue> promptValues, BaseEventSourceListener eventSourceListener) {
-        ChatCompletion chatCompletion = converToChatCompletion(promptValues);
+    public void streamPredict(PromptValue promptValue, BaseEventSourceListener eventSourceListener) {
+        ChatCompletion chatCompletion = converToChatCompletion(promptValue);
         chatCompletion.setStream(true);
 
         try {
@@ -66,7 +66,7 @@ public class AzureOpenAI extends BaseLLM {
             //创建事件
             factory.newEventSource(request, eventSourceListener);
 
-            super.streamPredict(promptValues, eventSourceListener);
+            super.streamPredict(promptValue, eventSourceListener);
         } catch (Exception e) {
             throw new JavaChainException(CommonError.PARAM_ERROR, e.getMessage());
         }
@@ -74,8 +74,8 @@ public class AzureOpenAI extends BaseLLM {
 
 
     @Override
-    protected LLMResult doPredict(List<PromptValue> promptValues) {
-        ChatCompletion chatCompletion = converToChatCompletion(promptValues);
+    protected LLMResult doPredict(PromptValue promptValue) {
+        ChatCompletion chatCompletion = converToChatCompletion(promptValue);
         ChatCompletionRequest chatCompletionRequest = convertToRequest(chatCompletion);
         ChatCompletionResult chatCompletionResult;
 
@@ -108,17 +108,16 @@ public class AzureOpenAI extends BaseLLM {
         return convertTOLLMResult(chatCompletionResult);
     }
 
-    private ChatCompletion converToChatCompletion(List<PromptValue> promptValues) {
+    private ChatCompletion converToChatCompletion(PromptValue promptValue) {
         ChatCompletion chatCompletion = new ChatCompletion();
         List<Message> messages = new ArrayList<>();
-        for (PromptValue promptValue : promptValues) {
-            for (BaseMessage baseMessage : promptValue.toMessages()) {
-                Message message = new Message();
-                message.setContent(baseMessage.getContent());
-                message.setRole(convertMessageType(baseMessage.getType()));
-                messages.add(message);
-            }
+        for (BaseMessage baseMessage : promptValue.toMessages()) {
+            Message message = new Message();
+            message.setContent(baseMessage.getContent());
+            message.setRole(convertMessageType(baseMessage.getType()));
+            messages.add(message);
         }
+
         chatCompletion.setMessages(messages);
         return chatCompletion;
     }

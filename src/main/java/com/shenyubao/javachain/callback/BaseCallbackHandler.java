@@ -14,7 +14,7 @@ import java.util.Map;
  * @date 2023/6/23 07:45
  */
 public interface BaseCallbackHandler {
-    void onLlmStart(List<PromptValue> promptValues);
+    void onLlmStart(PromptValue promptValues);
 
     void onLlmEnd(LLMResult result);
 

@@ -21,6 +21,10 @@ public class JavaChainConstant {
     public static final String CHAIN_PARAM_INPUT_DOCUMENTS = "input_documents";
     public static final String CHAIN_PARAM_RESULT_DOCUMENT = "output_text";
 
+//  SimpleSequentialChain
+    public static final String CHAIN_PARAM_INPUT = "input";
+    public static final String CHAIN_PARAM_OUTPUT= "output";
+
 
 
 

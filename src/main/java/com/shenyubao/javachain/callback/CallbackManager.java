@@ -19,7 +19,7 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper=false)
 public class CallbackManager extends BaseCallbackManager {
     @Override
-    public void onLlmStart(List<PromptValue> serialized) {
+    public void onLlmStart(PromptValue serialized) {
         getHandlers().stream().forEach(baseCallbackHandler -> baseCallbackHandler.onLlmStart(serialized));
     }
 

@@ -1,5 +1,6 @@
 package com.shenyubao.javachain.memory.impl;
 
+import com.shenyubao.javachain.chain.ChainContext;
 import com.shenyubao.javachain.connection.retriever.Document;
 import com.shenyubao.javachain.connection.retriever.VectorStoreRetriever;
 import com.shenyubao.javachain.memory.BaseMemory;
@@ -37,18 +38,17 @@ public class VectorStoreRetrieverMemory extends BaseMemory {
     }
 
     @Override
-    public Map<String, Object> loadMemoryVariables(Map<String, Object> inputs) {
-        String query = (String) inputs.get(inputKey);
-        List<Document> docs = retriever.getRelevantDocuments(query);
-        String result = docs.stream().map(e -> e.getPageContent()).collect(Collectors.joining("\n"));
-        Map<String, Object> output = new HashMap<>();
-        output.put(memoryKey, result);
-        return output;
+    public Object loadMemoryVariables(ChainContext context) {
+//        List<Document> docs = retriever.getRelevantDocuments(context.getInput());
+//        String result = docs.stream().map(Document::getPageContent).collect(Collectors.joining("\n"));
+//        Map<String, Object> output = new HashMap<>();
+//        output.put(memoryKey, result);
+        return context;
     }
 
     @Override
-    public void saveContext(Map<String, Object> inputs, Map<String, Object> outputs) {
-        List<Document> documents = fromDocuments(inputs, outputs);
+    public void saveContext(ChainContext context) {
+        List<Document> documents = fromDocuments(context);
         retriever.addDocuments(documents);
     }
 
@@ -57,23 +57,23 @@ public class VectorStoreRetrieverMemory extends BaseMemory {
 
     }
 
-    private List<Document> fromDocuments(Map<String, Object> inputs, Map<String, Object> outputs) {
-        List<String> texts = new ArrayList<>();
-        for (Map.Entry<String, Object> entry : inputs.entrySet()) {
-            if (entry.getKey().equals(memoryKey)) {
-                continue;
-            }
-            texts.add(String.format("%s: %s", entry.getKey(), entry.getValue()));
-        }
-        for (Map.Entry<String, Object> entry : outputs.entrySet()) {
-            texts.add(String.format("%s: %s", entry.getKey(), entry.getValue()));
-        }
-        String pageContent = texts.stream().collect(Collectors.joining("\n"));
-
-        List<Document> documents = new ArrayList<>();
-        Document document = new Document();
-        document.setPageContent(pageContent);
-        documents.add(document);
-        return documents;
+    private List<Document> fromDocuments(ChainContext context) {
+//        List<String> texts = new ArrayList<>();
+//        for (Map.Entry<String, Object> entry : inputs.entrySet()) {
+//            if (entry.getKey().equals(memoryKey)) {
+//                continue;
+//            }
+//            texts.add(String.format("%s: %s", entry.getKey(), entry.getValue()));
+//        }
+//        for (Map.Entry<String, Object> entry : outputs.entrySet()) {
+//            texts.add(String.format("%s: %s", entry.getKey(), entry.getValue()));
+//        }
+//        String pageContent = texts.stream().collect(Collectors.joining("\n"));
+//
+//        List<Document> documents = new ArrayList<>();
+//        Document document = new Document();
+//        document.setPageContent(pageContent);
+//        documents.add(document);
+        return new ArrayList<>();
     }
 }

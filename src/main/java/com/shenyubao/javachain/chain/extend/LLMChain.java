@@ -1,6 +1,8 @@
-package com.shenyubao.javachain.chain;
+package com.shenyubao.javachain.chain.extend;
 
 import com.shenyubao.javachain.JavaChainConstant;
+import com.shenyubao.javachain.chain.Chain;
+import com.shenyubao.javachain.chain.ChainContext;
 import com.shenyubao.javachain.llms.BaseLLM;
 import com.shenyubao.javachain.model.Generation;
 import com.shenyubao.javachain.model.LLMResult;
@@ -11,6 +13,7 @@ import lombok.EqualsAndHashCode;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author shenyubao
@@ -31,28 +34,19 @@ public class LLMChain extends Chain {
 
 
     @Override
-    public List<String> getInputKeys() {
-        return prompt.getInputVariables();
-    }
-
-    @Override
-    public List<String> getOutputKeys() {
-        return Collections.singletonList(JavaChainConstant.CHAIN_PARAM_RESULT);
-    }
-
-    @Override
-    protected Map<String, Object> onCall(Map<String, Object> inputs) {
+    public ChainContext onCall(ChainContext context) {
 
         try {
-            List<PromptValue> promptValues = Collections.singletonList(inputs).stream()
-                    .map(input -> prompt.formatPrompt(input)).collect(Collectors.toList());
-            LLMResult llmResult = llm.predict(promptValues);
+            context.addPromptParam("input", context.getInput());
+
+            PromptValue promptValue = prompt.formatPrompt(context.getPromptParams());
+            LLMResult llmResult = llm.predict(promptValue);
             if (llmResult.getGenerations().size() > 0) {
                 List<Generation> generations = llmResult.getGenerations();
                 String text = generations.get(0).getText();
-                inputs.put(JavaChainConstant.CHAIN_PARAM_RESULT, text);
+                context.setOutput(text);
             }
-            return inputs;
+            return context;
         } catch (Throwable e) {
             throw e;
         }

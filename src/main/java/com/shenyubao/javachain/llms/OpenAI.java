@@ -51,7 +51,7 @@ public class OpenAI extends BaseLLM {
     }
 
     @Override
-    public void streamPredict(List<PromptValue> promptValues, BaseEventSourceListener eventSourceListener) {
+    public void streamPredict(PromptValue promptValues, BaseEventSourceListener eventSourceListener) {
         ChatCompletion chatCompletion = converToChatCompletion(promptValues);
         chatCompletion.setStream(true);
 
@@ -74,10 +74,10 @@ public class OpenAI extends BaseLLM {
 
 
     @Override
-    protected LLMResult doPredict(List<PromptValue> promptValues) {
-        log.info("[LLM] LLM Content After Template Render:{}", promptValues);
+    protected LLMResult doPredict(PromptValue promptValue) {
+        log.info("[LLM] LLM Content After Template Render:{}", promptValue);
 
-        ChatCompletion chatCompletion = converToChatCompletion(promptValues);
+        ChatCompletion chatCompletion = converToChatCompletion(promptValue);
         ChatCompletionRequest chatCompletionRequest = convertToRequest(chatCompletion);
 
         ChatCompletionResult chatCompletionResult = chatClient.createChatCompletion(chatCompletionRequest);
@@ -102,23 +102,22 @@ public class OpenAI extends BaseLLM {
         return convertTOLLMResult(chatCompletionResult);
     }
 
-    private ChatCompletion converToChatCompletion(List<PromptValue> promptValues) {
+    private ChatCompletion converToChatCompletion(PromptValue promptValue) {
         ChatCompletion chatCompletion = new ChatCompletion();
         List<Message> messages = new ArrayList<>();
-        for (PromptValue promptValue : promptValues) {
-            for (BaseMessage baseMessage : promptValue.toMessages()) {
-                Message message = new Message();
-                message.setContent(baseMessage.getContent());
-                message.setRole(convertMessageType(baseMessage.getType()));
-                messages.add(message);
-            }
+        for (BaseMessage baseMessage : promptValue.toMessages()) {
+            Message message = new Message();
+            message.setContent(baseMessage.getContent());
+            message.setRole(convertMessageType(baseMessage.getType()));
+            messages.add(message);
         }
+
         chatCompletion.setMessages(messages);
         return chatCompletion;
     }
 
-    private String convertMessageType(String langchinType) {
-        switch (langchinType) {
+    private String convertMessageType(String langChainType) {
+        switch (langChainType) {
             case "human":
                 return Message.Role.USER.getName();
             case "chat":

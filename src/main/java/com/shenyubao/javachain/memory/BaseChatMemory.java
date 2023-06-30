@@ -1,5 +1,6 @@
 package com.shenyubao.javachain.memory;
 
+import com.shenyubao.javachain.chain.ChainContext;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
@@ -19,18 +20,18 @@ public abstract class BaseChatMemory extends BaseMemory{
 
     private String inputKey;
 
-    public void saveContext(Map<String, Object> inputs, Map<String, Object> outputs) {
-        String inputStr = getPromptInputKey(inputs);
-        String outputStr = null;
-        if(outputs.size() == 1) {
-            for (Map.Entry<String, Object> entry : outputs.entrySet()) {
-                outputStr = (String)entry.getValue();
-            }
-        } else {
-            outputStr = (String) outputs.get(outputKey);
-        }
-        chatMemory.addUserMessage(inputStr);
-        chatMemory.addAIMessage(outputStr);
+    public void saveContext(ChainContext chainContext) {
+//        String inputStr = getPromptInputKey(inputs);
+//        String outputStr = null;
+//        if(outputs.size() == 1) {
+//            for (Map.Entry<String, Object> entry : outputs.entrySet()) {
+//                outputStr = (String)entry.getValue();
+//            }
+//        } else {
+//            outputStr = (String) outputs.get(outputKey);
+//        }
+//        chatMemory.addUserMessage(inputStr);
+//        chatMemory.addAIMessage(outputStr);
     }
 
     public void clear() {

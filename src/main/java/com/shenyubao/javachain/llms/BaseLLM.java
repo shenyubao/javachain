@@ -16,11 +16,11 @@ public abstract class BaseLLM {
 
     public BaseCallbackManager callbackManager = new CallbackManager();
 
-    public void streamPredict(List<PromptValue> completion, BaseEventSourceListener eventSourceListener){
+    public void streamPredict(PromptValue completion, BaseEventSourceListener eventSourceListener){
         eventSourceListener.setBaseCallbackManager(callbackManager);
     }
 
-    protected abstract LLMResult doPredict(List<PromptValue> promptValues);
+    protected abstract LLMResult doPredict(PromptValue promptValue);
 
     /**
      * 大模型语言问答
@@ -28,7 +28,7 @@ public abstract class BaseLLM {
      * @param promptValues
      * @return
      */
-    public LLMResult predict(List<PromptValue> promptValues) {
+    public LLMResult predict(PromptValue promptValues) {
         callbackManager.onLlmStart(promptValues);
         LLMResult result = null;
         try {
@@ -43,20 +43,16 @@ public abstract class BaseLLM {
     }
 
     public LLMResult predict(String question) {
-        List<PromptValue> promptValueList = new ArrayList<>();
         StringPromptValue promptValue = new StringPromptValue();
         promptValue.setText(question);
-        promptValueList.add(promptValue);
-        return predict(promptValueList);
+        return predict(promptValue);
     }
 
     public void streamPredict(String question, BaseEventSourceListener eventSourceListener){
-        List<PromptValue> promptValueList = new ArrayList<>();
         StringPromptValue promptValue = new StringPromptValue();
         promptValue.setText(question);
-        promptValueList.add(promptValue);
 
-        streamPredict(promptValueList,eventSourceListener);
+        streamPredict(promptValue,eventSourceListener);
     }
 
 }

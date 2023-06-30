@@ -1,8 +1,7 @@
 package com.shenyubao.javachain.llms.vector;
 
-import com.shenyubao.javachain.chain.retrievalqa.RetrievalQA;
+import com.shenyubao.javachain.chain.extend.RetrievalChain;
 import com.shenyubao.javachain.connection.embeddings.OpenAIEmbeddings;
-import com.shenyubao.javachain.llms.OpenAI;
 import com.shenyubao.javachain.connection.vectorstore.MilvusStore;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +21,7 @@ public class MilvusStoreTest {
     @Test
     public void embedding_test() {
 
-        //holo数据库知识库向量持久化
+        //数据库知识库向量持久化
         MilvusStore milvusStore = new MilvusStore(milvus_endpoint,milvus_apiKey);
         milvusStore.setEmbedding(new OpenAIEmbeddings(endpoint, apiKey)); //openai提供的embeddings
         milvusStore.init();
@@ -37,11 +36,9 @@ public class MilvusStoreTest {
         milvusStore.addTexts(knowledge);
 
         //知识库向量检索
-        RetrievalQA qa = new RetrievalQA();
-        qa.setLlm(new OpenAI(endpoint, apiKey)); //chatgpt大模型
+        RetrievalChain qa = new RetrievalChain();
         qa.setRetriever(milvusStore.asRetriever());
         qa.setRecommendDocumentCount(2);
-        qa.init();
 
         //qa问答
         String answer = qa.call("OPENAPI有接口大小限制不，有的话是多少");

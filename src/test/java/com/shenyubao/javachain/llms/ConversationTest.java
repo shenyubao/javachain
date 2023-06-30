@@ -1,8 +1,6 @@
 package com.shenyubao.javachain.llms;
 
-import com.alibaba.fastjson2.JSON;
-import com.shenyubao.javachain.chain.ConversationChain;
-import com.shenyubao.javachain.memory.impl.ConversationBufferMemory;
+import com.shenyubao.javachain.chain.extend.ConversationChain;
 import com.shenyubao.javachain.memory.impl.ConversationBufferWindowsMemory;
 import com.shenyubao.javachain.prompt.BaseMessage;
 import com.shenyubao.javachain.prompt.message.AIMessage;
@@ -32,15 +30,14 @@ public class ConversationTest {
         historyMessages.add(new AIMessage("百灵AI有企业端和用户端，每个端都提供Chat工作台与浏览器插件"));
 
 //        构建包含历史对话的 Lang chain
-        ConversationChain conversation = new ConversationChain(true);
-        conversation.setLlm(openAI);
+        ConversationChain conversation = new ConversationChain();
         conversation.setVerbose(true);
         conversation.setMemory(new ConversationBufferWindowsMemory(historyMessages));
 
 //        构建问题
         Map<String, Object> inputs = new HashMap<>();
         inputs.put("input", "使用英语描述");
-        Map<String, Object> response = conversation.call(inputs);
-        System.out.println(JSON.toJSONString(response.get("text")));
+//        Map<String, Object> response = conversation.call(inputs);
+//        System.out.println(JSON.toJSONString(response.get("text")));
     }
 }

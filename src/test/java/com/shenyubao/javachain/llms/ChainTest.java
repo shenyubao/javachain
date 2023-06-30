@@ -1,11 +1,9 @@
 package com.shenyubao.javachain.llms;
 
-import com.shenyubao.javachain.chain.LLMChain;
+import com.shenyubao.javachain.chain.ChainContext;
+import com.shenyubao.javachain.chain.extend.LLMChain;
 import com.shenyubao.javachain.prompt.template.PromptTemplate;
 import org.junit.jupiter.api.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author shenyubao
@@ -31,14 +29,12 @@ class ChainTest {
         chain.setLlm(llm);
         chain.setPrompt(prompt);
 
-        Map<String, Object> inputs = new HashMap<>();
-        //知识库上下文
-        inputs.put("context",
-                "1、百灵AI123开放平台创建机器人，可以参考：https://www.bailing.ai/knowledge/123 。\n" +
-                        "2、openapi接口传数据是有大小限制，API调用请求最大报文限制在10M以内，这个是nginx限制的要求。\n");
-        //prompt
-        inputs.put("input", "开放平台如何创建机器人？");
-        Map<String, Object> response = chain.call(inputs);
-        System.out.println(response.get("text"));
+        ChainContext chainContext = new ChainContext();
+        chainContext.setInput("开放平台如何创建机器人？");
+        chainContext.addPromptParam("context","1、百灵AI123开放平台创建机器人，可以参考：https://www.bailing.ai/knowledge/123 。\n" +
+                "2、openapi接口传数据是有大小限制，API调用请求最大报文限制在10M以内，这个是nginx限制的要求。\n");
+
+        ChainContext response = chain.call(chainContext);
+        System.out.println(response.getOutput());
     }
 }
