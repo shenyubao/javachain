@@ -26,12 +26,17 @@ public abstract class VectorStore {
      * @param texts
      */
     public void addTexts(List<String> texts) {
+        this.addTexts(texts, null);
+    }
+
+    public void addTexts(List<String> texts, String datasetId) {
         List<Document> documents = new ArrayList<>();
         for (int i = 0; i < texts.size(); i++) {
             Document document = new Document();
             document.setPageContent(texts.get(i));
             document.setIndex(i);
             document.setEmbedding(embedding.embedQuery(texts.get(i)).getEmbedding());
+            document.setDatasetID(datasetId);
             documents.add(document);
         }
         addDocuments(documents);

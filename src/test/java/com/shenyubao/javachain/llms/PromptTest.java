@@ -2,6 +2,7 @@ package com.shenyubao.javachain.llms;
 
 import com.shenyubao.javachain.prompt.template.FewShotPromptTemplate;
 import com.shenyubao.javachain.prompt.template.PromptTemplate;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class PromptTest {
         Map<String, Object> context = new HashMap<>();
         context.put("product", "nike");
         String prompt = promptTemplate.format(context);
-        System.out.println(prompt);
+        Assertions.assertTrue(prompt.contains("nike"));
     }
 
     @Test
@@ -53,7 +54,7 @@ public class PromptTest {
         Map<String, Object> context = new HashMap<>();
         context.put("input", "big");
         String prompt = fewShotPromptTemplate.format(context);
-        System.out.println(prompt);
+        Assertions.assertTrue(prompt.contains("big"));
 
     }
 }

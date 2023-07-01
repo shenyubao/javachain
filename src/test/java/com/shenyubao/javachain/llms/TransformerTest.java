@@ -3,6 +3,7 @@ package com.shenyubao.javachain.llms;
 import com.shenyubao.javachain.connection.loader.PdfLoader;
 import com.shenyubao.javachain.connection.retriever.Document;
 import com.shenyubao.javachain.connection.transformer.RecursiveCharacterTextSplitter;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -20,6 +21,6 @@ public class TransformerTest {
         loader.setFilePath(path);
         loader.registerTransformer(new RecursiveCharacterTextSplitter());
         List<Document> documents = loader.load("10001");
-        System.out.println(documents);
+        Assertions.assertTrue(documents.size()>0);
     }
 }

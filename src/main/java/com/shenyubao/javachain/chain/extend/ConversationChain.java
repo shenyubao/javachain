@@ -29,7 +29,7 @@ public class ConversationChain extends Chain {
 
     private int maxHistoryCount = 3;
 
-    private int maxTokenCount = 1000;
+//    private int maxTokenCount = 1000;
 
     private String humanPrefix = "Human";
 
@@ -59,9 +59,9 @@ public class ConversationChain extends Chain {
         } else {
             windowMessages = new ArrayList<>();
         }
-        while (sumToken(windowMessages) > maxTokenCount) {
-            windowMessages = windowMessages.stream().skip(2).collect(Collectors.toList());
-        }
+//        while (sumToken(windowMessages) > maxTokenCount) {
+//            windowMessages = windowMessages.stream().skip(2).collect(Collectors.toList());
+//        }
 
         return Methods.getBufferString(windowMessages, getHumanPrefix(), getAiPrefix());
     }

@@ -1,19 +1,23 @@
 package com.shenyubao.javachain.llms;
 
+import com.shenyubao.javachain.utils.PropertiesUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
+ * TODO:
  * @author shenyubao
  * @date 2023/6/28 22:33
  */
 public class AgentTest {
-    String endpoint = "https://api.gptmf.top/";
-    String apiKey = "sk-EqNOl3UM3f0jVKz2C9044f6d3637407eB8D497A636336616";
+    String endpoint;
+    String apiKey;
 
+    @BeforeEach
+    void setUp() {
+        PropertiesUtils propertiesUtils = new PropertiesUtils("javachain");
 
-    @Test
-    void test_agent() {
-        OpenAI openAI = new OpenAI(endpoint, apiKey);
-
+        this.endpoint = propertiesUtils.get("openai.endpoint");
+        this.apiKey = propertiesUtils.get("openai.apikey");
     }
 }

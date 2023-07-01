@@ -1,9 +1,13 @@
-package com.shenyubao.javachain.llms;
+package com.shenyubao.javachain.llms.chain;
 
 import com.shenyubao.javachain.chain.ChainContext;
 import com.shenyubao.javachain.chain.extend.LLMChain;
+import com.shenyubao.javachain.llms.OpenAI;
 import com.shenyubao.javachain.llms.sse.OpenAIConsoleStreamListener;
 import com.shenyubao.javachain.prompt.template.PromptTemplate;
+import com.shenyubao.javachain.utils.PropertiesUtils;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CountDownLatch;
@@ -12,9 +16,17 @@ import java.util.concurrent.CountDownLatch;
  * @author shenyubao
  * @date 2023/6/23 22:33
  */
-class ChainTest {
-    String endpoint = "https://api.gptmf.top/";
-    String apiKey = "sk-EqNOl3UM3f0jVKz2C9044f6d3637407eB8D497A636336616";
+class LLMChainTest {
+    String endpoint;
+    String apiKey;
+
+    @BeforeEach
+    void setUp() {
+        PropertiesUtils propertiesUtils = new PropertiesUtils("javachain");
+
+        this.endpoint = propertiesUtils.get("openai.endpoint");
+        this.apiKey = propertiesUtils.get("openai.apikey");
+    }
 
     @Test
     public void test_chatgpt_run() {
@@ -34,15 +46,15 @@ class ChainTest {
 
         ChainContext chainContext = new ChainContext();
         chainContext.setInput("开放平台如何创建机器人？");
-        chainContext.addPromptParam("context","1、百灵AI123开放平台创建机器人，可以参考：https://www.bailing.ai/knowledge/123 。\n" +
+        chainContext.addPromptParam("context", "1、百灵AI123开放平台创建机器人，可以参考：https://www.bailing.ai/knowledge/123 。\n" +
                 "2、openapi接口传数据是有大小限制，API调用请求最大报文限制在10M以内，这个是nginx限制的要求。\n");
 
         ChainContext response = chain.call(chainContext);
-        System.out.println(response.getOutput());
+        Assertions.assertTrue(response.getOutput().length() > 0);
     }
 
-    @Test
-    public void test_chatgpt_run_stream(){
+
+    public void test_chatgpt_run_stream() {
         OpenAI llm = new OpenAI(endpoint, apiKey);
 
         PromptTemplate prompt = new PromptTemplate();
@@ -62,7 +74,7 @@ class ChainTest {
 
         ChainContext chainContext = new ChainContext();
         chainContext.setInput("开放平台如何创建机器人？");
-        chainContext.addPromptParam("context","1、百灵AI123开放平台创建机器人，可以参考：https://www.bailing.ai/knowledge/123 。\n" +
+        chainContext.addPromptParam("context", "1、百灵AI123开放平台创建机器人，可以参考：https://www.bailing.ai/knowledge/123 。\n" +
                 "2、openapi接口传数据是有大小限制，API调用请求最大报文限制在10M以内，这个是nginx限制的要求。\n");
 
         chain.call(chainContext);

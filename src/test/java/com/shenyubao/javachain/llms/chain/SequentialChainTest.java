@@ -11,7 +11,7 @@ import java.util.Arrays;
  * @author shenyubao
  * @date 2023/6/30 23:45
  */
-public class SequentialChain {
+public class SequentialChainTest {
     @Test
     void testSequentialChain() {
         FakeChain fakeChain1 = new FakeChain("fakeChain1");

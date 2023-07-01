@@ -2,7 +2,9 @@ package com.shenyubao.javachain.llms.llm;
 
 import com.shenyubao.javachain.llms.OpenAI;
 import com.shenyubao.javachain.llms.sse.OpenAIConsoleStreamListener;
+import com.shenyubao.javachain.utils.PropertiesUtils;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CountDownLatch;
@@ -12,8 +14,16 @@ import java.util.concurrent.CountDownLatch;
  * @date 2023/6/23 22:33
  */
 class OpenAITest {
-    String endpoint = "https://api.gptmf.top/";
-    String apiKey = "sk-EqNOl3UM3f0jVKz2C9044f6d3637407eB8D497A636336616";
+    String endpoint;
+    String apiKey;
+
+    @BeforeEach
+    void setUp() {
+        PropertiesUtils propertiesUtils = new PropertiesUtils("javachain");
+
+        this.endpoint = propertiesUtils.get("openai.endpoint");
+        this.apiKey = propertiesUtils.get("openai.apikey");
+    }
 
     @Test
     void test_predict() {
@@ -22,7 +32,6 @@ class OpenAITest {
         Assertions.assertTrue(result.length() > 0);
     }
 
-    @Test
     void test_predict_stream() {
         OpenAI openAI = new OpenAI(endpoint,apiKey);
         OpenAIConsoleStreamListener eventSourceListener = new OpenAIConsoleStreamListener();

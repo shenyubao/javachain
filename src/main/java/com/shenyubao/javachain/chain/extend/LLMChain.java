@@ -1,6 +1,5 @@
 package com.shenyubao.javachain.chain.extend;
 
-import com.shenyubao.javachain.JavaChainConstant;
 import com.shenyubao.javachain.chain.Chain;
 import com.shenyubao.javachain.chain.ChainContext;
 import com.shenyubao.javachain.llms.BaseLLM;
@@ -13,8 +12,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 /**
  * @author shenyubao

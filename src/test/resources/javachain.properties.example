@@ -1,0 +1,9 @@
+azure.endpoint=https://xxxxx.openai.azure.com/
+azure.apikey=xxxxx
+azure.modelName=xxx
+
+openai.endpoint=https://xxxx/
+openai.apikey=sk-xxx
+
+milvus_endpoint=https://xxx.zillizcloud.com
+milvus_apikey=xxxx

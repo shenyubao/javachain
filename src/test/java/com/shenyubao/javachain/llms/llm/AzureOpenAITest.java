@@ -1,8 +1,11 @@
 package com.shenyubao.javachain.llms.llm;
 
 import com.shenyubao.javachain.llms.AzureOpenAI;
+import com.shenyubao.javachain.llms.OpenAI;
 import com.shenyubao.javachain.llms.sse.OpenAIConsoleStreamListener;
+import com.shenyubao.javachain.utils.PropertiesUtils;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CountDownLatch;
@@ -12,9 +15,19 @@ import java.util.concurrent.CountDownLatch;
  * @date 2023/6/23 22:33
  */
 class AzureOpenAITest {
-    String endpoint = "https://ai123app.openai.azure.com/";
-    String apiKey = "6b10ecc898054dc6a2922a16c034ce4b";
-    String modelName = "default";
+    String endpoint;
+    String apiKey;
+    String modelName;
+
+    @BeforeEach
+    void setUp() {
+        PropertiesUtils propertiesUtils = new PropertiesUtils("javachain");
+
+        this.endpoint = propertiesUtils.get("azure.endpoint");
+        this.apiKey = propertiesUtils.get("azure.apikey");
+        this.modelName = propertiesUtils.get("azure.modelName");
+    }
+
     @Test
     void test_predict() {
         AzureOpenAI openAI = new AzureOpenAI(endpoint, apiKey, modelName);
@@ -22,7 +35,7 @@ class AzureOpenAITest {
         Assertions.assertTrue(result.length() > 0);
     }
 
-    @Test
+
     void test_predict_stream() {
         AzureOpenAI openAI = new AzureOpenAI(endpoint, apiKey, modelName);
         OpenAIConsoleStreamListener eventSourceListener = new OpenAIConsoleStreamListener();
