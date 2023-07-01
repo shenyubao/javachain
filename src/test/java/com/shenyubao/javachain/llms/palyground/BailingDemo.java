@@ -8,6 +8,7 @@ import com.shenyubao.javachain.chain.router.SequentialChain;
 import com.shenyubao.javachain.connection.embeddings.OpenAIEmbeddings;
 import com.shenyubao.javachain.connection.vectorstore.MilvusStore;
 import com.shenyubao.javachain.llms.OpenAI;
+import com.shenyubao.javachain.llms.sse.OpenAIConsoleStreamListener;
 import com.shenyubao.javachain.prompt.BaseMessage;
 import com.shenyubao.javachain.prompt.PromptConstants;
 import com.shenyubao.javachain.prompt.message.AIMessage;
@@ -15,6 +16,7 @@ import com.shenyubao.javachain.prompt.message.HumanMessage;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * @author shenyubao
@@ -91,6 +93,8 @@ public class BailingDemo {
         llmChain.setPrompt(PromptConstants.QA_CONVERSATION_CH);
         llmChain.setLlm(openAI);
         llmChain.setVerbose(true);
+        llmChain.setIsSteam(true);
+        llmChain.setEventSourceListener(new OpenAIConsoleStreamListener());
 
         // 构建问题
         SequentialChain sequentialChain = new SequentialChain();
@@ -98,5 +102,12 @@ public class BailingDemo {
         String response = sequentialChain.call("百灵AI的浏览器插件是做什么的");
         System.out.println(response);
 
+        // 阻塞主线程
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

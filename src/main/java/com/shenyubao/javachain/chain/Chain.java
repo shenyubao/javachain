@@ -24,7 +24,6 @@ public abstract class Chain {
      */
     private boolean verbose;
 
-
     /**
      * chain调用 start
      **/

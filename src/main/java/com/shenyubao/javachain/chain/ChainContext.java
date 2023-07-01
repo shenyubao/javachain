@@ -1,5 +1,6 @@
 package com.shenyubao.javachain.chain;
 
+import com.shenyubao.javachain.llms.sse.BaseEventSourceListener;
 import com.shenyubao.javachain.prompt.template.PromptTemplate;
 import lombok.Data;
 
@@ -20,6 +21,11 @@ public class ChainContext {
      * 输出内容
      */
     private String output;
+
+    /**
+     * 输出内容，流式
+     */
+    private BaseEventSourceListener eventSourceListener;
 
     /**
      * Prompt 模板

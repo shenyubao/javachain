@@ -16,10 +16,6 @@ public abstract class BaseLLM {
 
     public BaseCallbackManager callbackManager = new CallbackManager();
 
-    public void streamPredict(PromptValue completion, BaseEventSourceListener eventSourceListener){
-        eventSourceListener.setBaseCallbackManager(callbackManager);
-    }
-
     protected abstract LLMResult doPredict(PromptValue promptValue);
 
     /**
@@ -53,6 +49,10 @@ public abstract class BaseLLM {
         promptValue.setText(question);
 
         streamPredict(promptValue,eventSourceListener);
+    }
+
+    public void streamPredict(PromptValue completion, BaseEventSourceListener eventSourceListener){
+        eventSourceListener.setBaseCallbackManager(callbackManager);
     }
 
 }
