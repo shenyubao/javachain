@@ -32,7 +32,7 @@ openAI.streamPredict("使用Java写一段代码，获取本机IP地址", eventSo
 ## 2.3 Prompt
 在LLM应用中通常需要根据模板渲染Prompt，`promptTemplate`用于渲染Prompt
 ```java
-了0；0；String template = "I want you to act as a naming consultant for new companies.\nWhat is a good name for a company that makes {product}?";
+String template = "I want you to act as a naming consultant for new companies.\nWhat is a good name for a company that makes {product}?";
 PromptTemplate promptTemplate = new PromptTemplate();
 promptTemplate.setTemplate(template);
 Map<String, Object> context = new HashMap<>();
