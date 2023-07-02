@@ -1,9 +1,14 @@
 plugins {
     id 'java'
+    id 'maven-publish'
+    id 'signing'
 }
 
-group = 'com.shenyubao.javachain'
-version = '1.0-SNAPSHOT'
+group = 'io.github.shenyubao'
+version = '0..0-SNAPSHOT'
+//version = "0.1.0"
+
+sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
@@ -50,4 +55,94 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+task sourcesJar(type: Jar) {
+    archiveClassifier = 'sources'
+    from sourceSets.main.allJava
+}
+task javadocJar(type: Jar) {
+    archiveClassifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+javadoc {
+    description = "Generates project-level javadoc for use in -javadoc jar"
+
+    options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+    options.author = true
+    options.version = true
+    options.header = project.name
+    options.addStringOption('Xdoclint:none', '-quiet')
+
+    // suppress warnings due to cross-module @see and @link references;
+    // note that global 'api' task does display all warnings.
+    logging.captureStandardError LogLevel.INFO
+    logging.captureStandardOutput LogLevel.INFO // suppress "## warnings" message
+    options.encoding = "UTF-8"  //编码一定要配置否则直接出错
+    options.charSet = 'UTF-8'
+}
+
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId project.group
+            artifactId project.name
+            version "${version}"
+            from components.java
+
+            artifact sourcesJar
+            artifact javadocJar
+
+            pom {
+                name = "javachain"
+                description = "Building applications with LLMs through composabilityt"
+                url = "https://github.com/shenyuabo/javachain"
+                licenses {
+                    license {
+                        name = "The Apache License, Version 2.0"
+                        url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                    }
+                }
+                developers {
+                    developer {
+                        id = "ssybb1988"
+                        name = "shenyubao"
+                        email = "ssybb1988@gmail.com"
+                    }
+                }
+                scm {
+                    connection = "scm:git:https://github.com/shenyubao/javachain.git"
+                    developerConnection = "scm:git:https://github.com/shenyubao/javachain.git"
+                    url = "https://github.com/shenyubao/javachain"
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            name 'sonatypeRepository'
+            url 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+            credentials {
+                username = "${nexus_username}"
+                password = "${nexus_password}"
+            }
+        }
+        maven {
+            name = 'sonatypeSnapshotRepository'
+            url = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+            credentials {
+                username = "${nexus_username}"
+                password = "${nexus_password}"
+            }
+        }
+    }
+}
+
+// must after publishing
+signing {
+    useGpgCmd()
+    sign configurations.archives
+    sign publishing.publications.mavenJava
 }
