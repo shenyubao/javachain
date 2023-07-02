@@ -1,9 +1,7 @@
 # 🦜️ JavaChain
-基于 Java 快速搭建 LLM 应用
 
 # 1. What is this?
-JavaChain 参考了 Langchain 的架构，基于Java8实现。
-
+JavaChain 用于快速搭建LLM应用。 JavaChain 参考了 LangChain 的架构设计，基于Java8实现。
 
 # 2. QuickStart
 ## 2.1 引入POM依赖
@@ -34,7 +32,7 @@ openAI.streamPredict("使用Java写一段代码，获取本机IP地址", eventSo
 ## 2.3 Prompt
 在LLM应用中通常需要根据模板渲染Prompt，`promptTemplate`用于渲染Prompt
 ```java
-String template = "I want you to act as a naming consultant for new companies.\nWhat is a good name for a company that makes {product}?";
+了0；0；String template = "I want you to act as a naming consultant for new companies.\nWhat is a good name for a company that makes {product}?";
 PromptTemplate promptTemplate = new PromptTemplate();
 promptTemplate.setTemplate(template);
 Map<String, Object> context = new HashMap<>();
@@ -44,7 +42,7 @@ String prompt = promptTemplate.format(context);
 ## 2.4 Chain
 Chain是LangChain中最核心的组件，用于将各种LLM的动作合并起来，构建成LLM应用。
 
-## 2.4.1 控制类Chain
+## 2.4.1 控制类 Chain
 `SequentialChain` 用于合并多个Chain，并将其串行执行
 ```java
 FakeChain fakeChain1 = new FakeChain("fakeChain1");
@@ -53,7 +51,7 @@ SequentialChain sequentialChain = new SequentialChain();
 sequentialChain.setChains(Arrays.asList(fakeChain1,fakeChain2));
 ```
 
-## 2.4.2 动作类Chain
+## 2.4.2 动作类 Chain
 `ConversationChain` 用于合并历史对话，实现上下文对话
 ```java
 List<BaseMessage> historyMessages = new ArrayList<>();
