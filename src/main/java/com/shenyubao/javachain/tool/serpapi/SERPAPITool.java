@@ -1,12 +1,15 @@
-package com.shenyubao.javachain.tool;
+package com.shenyubao.javachain.tool.serpapi;
+
+import com.shenyubao.javachain.tool.BaseTool;
+import com.shenyubao.javachain.tool.ToolExecuteResult;
 
 /**
  * @author shenyubao
  * @date 2023/6/28 22:47
  */
-public class SearchAPITool extends BaseTool{
-    public SearchAPITool() {
-        setName("search");
+public class SERPAPITool extends BaseTool {
+    public SERPAPITool() {
+        setName("serpapi");
         setDescription("A search engine. Useful for when you need to answer questions about current events. Input should be a search query.");
     }
 

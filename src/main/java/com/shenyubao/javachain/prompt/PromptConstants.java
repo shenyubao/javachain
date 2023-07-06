@@ -57,4 +57,5 @@ public class PromptConstants {
 
     public static final PromptTemplate QA_CONVERSATION_CH = new PromptTemplate(QA_PROMPT_TEMPLATE_CONVERSATION_CH);
 
+
 }
