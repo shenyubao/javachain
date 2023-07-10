@@ -1,9 +1,11 @@
 package com.shenyubao.javachain.agent;
 
 import com.shenyubao.javachain.callback.BaseCallbackManager;
+import com.shenyubao.javachain.chain.ChainContext;
 import com.shenyubao.javachain.chain.extend.LLMChain;
 import com.shenyubao.javachain.outputparse.AgentOutputParser;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.Map;
  * @date 2023/7/2 18:11
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 public abstract class Agent extends BaseSingleActionAgent {
     private LLMChain llmChain;
     private AgentOutputParser outputParser;
@@ -54,26 +57,23 @@ public abstract class Agent extends BaseSingleActionAgent {
         return thoughts;
     }
 
-    public Object plan(List<AgentAction> intermediateSteps, Map<String, Object> inputs, BaseCallbackManager callbackManager) {
-        Map<String, Object> fullInputs = getFullInputs(intermediateSteps, inputs);
-        String fullOutput = llmChaingit.onCall(fullInputs, callbackManager);
-        return outputParser.parse(fullOutput);
+    public Object plan(List<AgentAction> intermediateSteps, ChainContext chainContext) {
+        fillInputs(intermediateSteps, chainContext);
+        ChainContext fullOutput = llmChain.onCall(chainContext);
+        return outputParser.parse(fullOutput.getOutput());
     }
 
     /**
      * 从中间步骤为 LLMChain 创建完整的输入
      *
      * @param intermediateSteps
-     * @param inputs
      * @return
      */
-    public Map<String, Object> getFullInputs(List<AgentAction> intermediateSteps, Map<String, Object> inputs) {
+    public ChainContext fillInputs(List<AgentAction> intermediateSteps, ChainContext context) {
         String thoughts = constructScratchpad(intermediateSteps);
 
-        Map<String, Object> fullInputs = new HashMap<>();
-        fullInputs.putAll(inputs);
-        fullInputs.put("agent_scratchpad", thoughts);
-        fullInputs.put("stop", stop());
-        return fullInputs;
+        context.addPromptParam("agent_scratchpad", thoughts);
+        context.addPromptParam("stop", stop());
+        return context;
     }
 }

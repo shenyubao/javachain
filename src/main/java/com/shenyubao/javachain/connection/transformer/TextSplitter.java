@@ -2,6 +2,7 @@ package com.shenyubao.javachain.connection.transformer;
 
 import com.shenyubao.javachain.connection.retriever.Document;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
  * @date 2023/6/28 22:54
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Slf4j
 public abstract class TextSplitter extends BaseTransformer{
     private int chunkSize = 4000;

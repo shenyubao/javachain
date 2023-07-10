@@ -1,6 +1,8 @@
-package com.shenyubao.javachain.tool;
+package com.shenyubao.javachain.tool.calculator;
 
 import com.shenyubao.javachain.llms.BaseLLM;
+import com.shenyubao.javachain.tool.BaseTool;
+import com.shenyubao.javachain.tool.ToolExecuteResult;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;

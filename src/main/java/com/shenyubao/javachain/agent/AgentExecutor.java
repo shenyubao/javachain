@@ -7,6 +7,7 @@ import com.shenyubao.javachain.chain.ChainContext;
 import com.shenyubao.javachain.tool.BaseTool;
 import com.shenyubao.javachain.tool.ToolExecuteResult;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
  * @date 2023/7/2 17:57
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class AgentExecutor extends Chain {
     private BaseSingleActionAgent agent;
     private List<BaseTool> tools;
@@ -41,39 +43,34 @@ public class AgentExecutor extends Chain {
 
     @Override
     public ChainContext onCall(ChainContext context) {
-        try {
-            List<AgentAction> intermediateSteps = new ArrayList<>();
-            int iterations = 0;
-            Double timeElapsed = 0.0d;
+        List<AgentAction> intermediateSteps = new ArrayList<>();
+        int iterations = 0;
+        Double timeElapsed = 0.0d;
 
-            Map<String, BaseTool> nameToToolMap = new TreeMap<>();
-            for (BaseTool tool : tools) {
-                nameToToolMap.put(tool.getName(), tool);
-            }
-
-            while (shouldContinue(iterations, timeElapsed)) {
-                Object nextStepOutput = takeNextStep(nameToToolMap, context.getPromptParams(), intermediateSteps, null);
-                if (nextStepOutput == null) {
-                    return null;
-                }
-                if (nextStepOutput instanceof AgentFinish) {
-                    return returnAgent((AgentFinish) nextStepOutput, intermediateSteps, null);
-                }
-                intermediateSteps.add((AgentAction) nextStepOutput);
-                iterations += 1;
-            }
-
-//            if (callbackManager != null) {
-//                callbackManager.onChainEnd(inputs);
-//            }
-
-            return null;
-        } catch (Throwable e) {
-//            if (callbackManager != null) {
-//                callbackManager.onChainError(e);
-//            }
-            throw e;
+        Map<String, BaseTool> nameToToolMap = new TreeMap<>();
+        for (BaseTool tool : tools) {
+            nameToToolMap.put(tool.getName(), tool);
         }
+
+        while (shouldContinue(iterations, timeElapsed)) {
+            Object nextStepOutput = takeNextStep(nameToToolMap, context, intermediateSteps);
+            if (nextStepOutput == null) {
+                return null;
+            }
+            if (nextStepOutput instanceof AgentFinish) {
+                Map<String, Object> finalOutput = ((AgentFinish) nextStepOutput).getReturnValues();
+                context.setOutput(finalOutput.get("output").toString());
+
+                //TODO: how to show intermediate_steps
+//                if (returnIntermediateSteps) {
+//                    finalOutput.put("intermediate_steps", intermediateSteps);
+//                }
+                return context;
+            }
+            intermediateSteps.add((AgentAction) nextStepOutput);
+            iterations += 1;
+        }
+        return context;
     }
 
 
@@ -97,31 +94,18 @@ public class AgentExecutor extends Chain {
         return true;
     }
 
-    private ChainContext returnAgent(AgentFinish output, List<AgentAction> intermediateSteps, BaseCallbackManager callbackManager) {
-        if (callbackManager != null) {
-            callbackManager.onAgentFinish(output);
-        }
-        Map<String, Object> finalOutput = output.getReturnValues();
-        if (returnIntermediateSteps) {
-            finalOutput.put("intermediate_steps", intermediateSteps);
-        }
-        //TODO:
-        return null;
-    }
-
     /**
      * 在思想-行动-观察循环中迈出一步。这可以控制代理如何做出选择并根据选择采取行动
      *
      * @param nameToToolMap
-     * @param inputs
+     * @param chainContext
      * @param intermediateSteps
      * @return
      */
     public Object takeNextStep(Map<String, BaseTool> nameToToolMap,
-                               Map<String, Object> inputs,
-                               List<AgentAction> intermediateSteps,
-                               BaseCallbackManager callbackManager) {
-        Object output = agent.plan(intermediateSteps, inputs, callbackManager);
+                               ChainContext chainContext,
+                               List<AgentAction> intermediateSteps) {
+        Object output = agent.plan(intermediateSteps, chainContext);
         if (output == null) {
             return null;
         }
@@ -133,15 +117,12 @@ public class AgentExecutor extends Chain {
             actions.add((AgentAction) output);
         }
         for (AgentAction agentAction : actions) {
-            if (callbackManager != null) {
-                callbackManager.onAgentAction(agentAction);
-            }
             //可以模糊匹配
             String toolName = containActionName(nameToToolMap, agentAction.getTool());
             if (!StringUtils.isEmpty(toolName)) {
                 BaseTool tool = nameToToolMap.get(toolName);
 //                boolean returnDirect = tool.isReturnDirect();
-                ToolExecuteResult toolExecuteResult = tool.run(agentAction.getToolInput(), callbackManager);
+                ToolExecuteResult toolExecuteResult = tool.run(agentAction.getToolInput());
                 if (toolExecuteResult == null) {
                     return null;
                 }

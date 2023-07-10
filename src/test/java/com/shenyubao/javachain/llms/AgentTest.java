@@ -36,7 +36,7 @@ public class AgentTest {
         List<BaseTool> tools = ToolLoader.loadLools(Arrays.asList("serpapi", "llm-math"), openAI);
 
         AgentExecutor agentExecutor = AgentLoader.initializeAgent(tools, openAI);
-        String question = "Who is Leo DiCaprio's girlfriend? What is her current age raised to the 0.43 power?";
+        String question = "张国立的老是谁? 她的年龄的平方数是多少?";
 
         ChainContext context = new ChainContext();
         context.setInput(question);

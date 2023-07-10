@@ -4,6 +4,7 @@ import com.shenyubao.javachain.agent.AgentAction;
 import com.shenyubao.javachain.agent.AgentFinish;
 import com.shenyubao.javachain.agent.mrkl.MRKLPromptConstants;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +16,7 @@ import java.util.regex.Pattern;
  * @date 2023/7/3 00:01
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class MRKLOutputParser extends AgentOutputParser {
 
     private static final String FINAL_ANSWER_ACTION = "Final Answer:";
