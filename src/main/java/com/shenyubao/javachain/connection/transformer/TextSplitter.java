@@ -2,6 +2,7 @@ package com.shenyubao.javachain.connection.transformer;
 
 import com.shenyubao.javachain.connection.retriever.Document;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
  * @date 2023/6/28 22:54
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Slf4j
 public abstract class TextSplitter extends BaseTransformer{
     private int chunkSize = 4000;
@@ -34,11 +36,13 @@ public abstract class TextSplitter extends BaseTransformer{
     public List<Document> splitDocuments(List<Document> documents) {
         List<String> texts = new ArrayList<>();
         List<Map<String, Object>> metadatas = new ArrayList<>();
+        String datasetId = null;
         for (Document document : documents) {
             texts.add(document.getPageContent());
             metadatas.add(document.getMetadata());
+            datasetId = document.getDatasetID();
         }
-        return createDocuments(texts, metadatas);
+        return createDocuments(texts, metadatas,datasetId);
     }
 
     /**
@@ -48,7 +52,7 @@ public abstract class TextSplitter extends BaseTransformer{
      * @param metadatas
      * @return
      */
-    public List<Document> createDocuments(List<String> texts, List<Map<String, Object>> metadatas) {
+    public List<Document> createDocuments(List<String> texts, List<Map<String, Object>> metadatas, String datasetId) {
         List<Document> documents = new ArrayList<>();
         int index = 0;
         for (String text : texts) {
@@ -56,6 +60,7 @@ public abstract class TextSplitter extends BaseTransformer{
             for (String chunk : chunks) {
                 Document newDoc = new Document();
                 newDoc.setPageContent(chunk);
+                newDoc.setDatasetID(datasetId);
                 if(metadatas != null && metadatas.size() == texts.size()) {
                     newDoc.setMetadata(metadatas.get(index));
                 }

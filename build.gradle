@@ -36,6 +36,9 @@ dependencies {
     implementation('com.alibaba:druid:1.1.23')
 //    implementation('org.springframework:spring-context:4.3.25.RELEASE')
 
+    //    Tool:SERPAPI
+//    implementation 'com.github.serpapi:google-search-results-java:2.0.2'
+
 //    retrofit2
     implementation('com.squareup.retrofit2:retrofit:2.9.0')
     implementation('com.squareup.retrofit2:adapter-rxjava2:2.9.0')
@@ -48,6 +51,8 @@ dependencies {
 
     compileOnly('org.projectlombok:lombok:1.18.24')
     annotationProcessor('org.projectlombok:lombok:1.18.24')
+
+
 
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
