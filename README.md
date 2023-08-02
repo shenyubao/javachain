@@ -101,7 +101,7 @@ Data Connector 是 JavaChain中的次核心模块，包含多个组件，实现�
 
 ## 2.5.1 Document Loader
 JavaChain 直接复用了 LangChain 的 API，以复用LangChain社区丰富的Docuemnt Loader组件。对应的，部分Loader也是通过调用Python脚本来实现。
-!!! 使用Loader前需要先安装 langchain, unstructured 等python组件（TBD）
+!!! 使用Loader前需要先安装所需的python组件(pip install langchain unstructured pdfminer pdfminer.six pdf2image)
 
 ```java
 Docx2txtLoader loader = new Docx2txtLoader();
