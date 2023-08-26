@@ -166,6 +166,12 @@ List<Document> documents = milvusStore.similaritySearch(datasetId,"OPENAPI有接
 - [ ] 错误码列表及处理建议
 
 # 6. 用户社区
-![image](https://github.com/shenyubao/javachain/assets/1533087/1ccb6b02-0ea7-4c61-84a4-4eaa6de1cb98)
+![1693091369333](https://github.com/shenyubao/javachain/assets/1533087/bbff7732-cd5b-44ed-8925-daf7f9c7ca32)
+
+# 7. 赞助作者
+|微信|支付宝|
+|-|-|
+|![image](https://github.com/shenyubao/javachain/assets/1533087/58c080f0-271b-4830-a3fb-fcb1e98adcc1)|![image](https://github.com/shenyubao/javachain/assets/1533087/c7b02976-f7ab-41ea-bb72-ccd29a11ea4b)|
+
 
 
