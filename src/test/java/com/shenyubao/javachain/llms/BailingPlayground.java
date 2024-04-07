@@ -31,7 +31,7 @@ public class BailingPlayground {
     private String milvus_apiKey = "271b1b701d3db511d3d03b5910a33a01bdc5d2e9ad24f5e85ecd1c55634ad12b691f4e17b62f2ee0b09d142292676a3291b19a2e";
     private String milvus_endpoint = "https://in03-7b401d24765d2cb.api.gcp-us-west1.zillizcloud.com";
 
-//    @Test
+    //    @Test
     void test_conversation_history() {
         // ConversationChain -> LLMChain
         // 渲染历史对话        -> 请求大语言模型
@@ -45,7 +45,7 @@ public class BailingPlayground {
         conversation.setMessages(historyMessages);
 
         // LLMChain
-        OpenAI openAI = new OpenAI(endpoint,apiKey);
+        OpenAI openAI = new OpenAI(endpoint, apiKey);
 
         LLMChain llmChain = new LLMChain();
         llmChain.setPrompt(PromptConstants.CONVERSATION_PROMPT_CH);
@@ -60,7 +60,7 @@ public class BailingPlayground {
 
     }
 
-//    @Test
+    //    @Test
     void test_conversation_knowledge() {
         //  ConversationChain -> RetrievalChain -> StuffDocumentChain -> LLMChain
         // 渲染历史对话 -> 查询知识库       ->  知识库内容渲染       -> 请求大语言模型
@@ -74,7 +74,7 @@ public class BailingPlayground {
         conversation.setMessages(historyMessages);
 
         //  RetrievalChain
-        MilvusStore milvusStore = new MilvusStore(milvus_endpoint,milvus_apiKey);
+        MilvusStore milvusStore = new MilvusStore(milvus_endpoint, milvus_apiKey);
         milvusStore.setEmbedding(new OpenAIEmbeddings(endpoint, apiKey)); //openai提供的embeddings
         milvusStore.init();
 
@@ -87,7 +87,7 @@ public class BailingPlayground {
         StuffDocumentChain stuffDocumentChain = new StuffDocumentChain();
 
         // LLMChain
-        OpenAI openAI = new OpenAI(endpoint,apiKey);
+        OpenAI openAI = new OpenAI(endpoint, apiKey);
 
         LLMChain llmChain = new LLMChain();
         llmChain.setPrompt(PromptConstants.QA_CONVERSATION_CH);

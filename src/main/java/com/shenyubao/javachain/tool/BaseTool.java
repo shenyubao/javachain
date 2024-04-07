@@ -36,26 +36,6 @@ public abstract class BaseTool {
     private boolean verbose;
 
     public ToolExecuteResult run(String toolInput) {
-        return run(toolInput, null);
-    }
-
-    public ToolExecuteResult run(String toolInput, BaseCallbackManager callbackManager) {
-        if(callbackManager != null) {
-            callbackManager.onToolStart(toolInput);
-        }
-        try {
-            ToolExecuteResult toolExecuteResult = run(toolInput);
-
-            if(callbackManager != null) {
-                callbackManager.onToolEnd(toolExecuteResult);
-            }
-
-            return toolExecuteResult;
-        } catch (Throwable e) {
-            if(callbackManager != null) {
-                callbackManager.onToolError(e);
-            }
-            throw e;
-        }
+        return run(toolInput);
     }
 }

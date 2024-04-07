@@ -1,6 +1,8 @@
 package com.shenyubao.javachain.tool;
 
 import com.shenyubao.javachain.llms.BaseLLM;
+import com.shenyubao.javachain.tool.calculator.LLMMathTool;
+import com.shenyubao.javachain.tool.serpapi.SERPAPITool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,7 @@ public class ToolLoader {
                 tool.setLlm(llm);
                 baseTools.add(tool);
             } else if(toolName.equals("serpapi")) {
-                SearchAPITool tool = new SearchAPITool();
+                SERPAPITool tool = new SERPAPITool();
                 baseTools.add(tool);
             }
         }
