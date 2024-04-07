@@ -7,3 +7,5 @@ openai.apikey=sk-xxx
 
 milvus_endpoint=https://xxx.zillizcloud.com
 milvus_apikey=xxxx
+
+tongyi.apikey=xxxx

@@ -57,7 +57,7 @@ public class ChatCompletion implements Serializable {
      */
     @JsonProperty("top_p")
     @Builder.Default
-    private Double topP = 1d;
+    private Double topP = 0.8;
 
 
     /**
@@ -168,6 +168,8 @@ public class ChatCompletion implements Serializable {
          * gpt-4-0613，支持函数
          */
         GPT_4_32K_0613("gpt-4-32k-0613"),
+
+        QWEN_PLUS_V1("qwen-plus-v1"),
         ;
         private String name;
     }
